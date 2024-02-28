@@ -19,6 +19,7 @@ with tf.Graph().as_default():
 
   init_op = tf.group([tf.global_variables_initializer(), 
   tf.tables_initializer()])
+  
   with tf.Session() as session:
     session.run(init_op)
     tf.saved_model.simple_save(
