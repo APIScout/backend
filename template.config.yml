@@ -1,0 +1,6 @@
+# ElasticSearch Credentials
+elastic:
+  host: ""
+  port: 9200
+  user: ""
+  password: ""

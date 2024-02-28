@@ -1,0 +1,16 @@
+version: "2.2"
+services:
+  model:
+    image: tensorflow/serving
+    container_name: universal_encoder
+    networks:
+      - be-network
+    ports:
+      - '8501:8501'
+    volumes:
+      - ./models/universal-encoder:/models/universal_encoder
+    environment:
+      MODEL_NAME: "universal_encoder"
+networks:
+  be-network:
+    driver: bridge
