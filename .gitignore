@@ -24,4 +24,5 @@ go.work
 ca.crt
 *.config.yml
 !template.config.yml
-models/
+models/*
+!.keep
