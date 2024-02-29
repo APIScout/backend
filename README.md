@@ -1,8 +1,15 @@
 # backend
 
+## Set ENV Variables
+
+The following are the variables that need to be set:
+
+- `GIN_MODE`: In which mode Gin should be running (can be `release` or `debug`)
+- `MODELS_HOST`: The hostname of the DL models container
+
 ## Downloading Model
 
-To download the USE model, run the following python script:
+To download the Universal Sentence Encoder model, run the following python script:
 
 ```python
 import tensorflow_hub as hub

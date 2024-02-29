@@ -5,13 +5,13 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+
+	"backend/app/internal/structs"
 )
 
 
-type Embeddings struct {
-	Predictions [][]float32
-}
-
+type Embeddings = structs.Embeddings
 
 func Embed(fragments []string) *Embeddings {
 	body, _ := json.Marshal(map[string][]string{
@@ -21,7 +21,7 @@ func Embed(fragments []string) *Embeddings {
 	// Call embedding model
 	reqBody := bytes.NewBuffer(body)
 	res, err := http.Post(
-		"http://127.0.0.1:8501/v1/models/universal_encoder:predict",
+		"http://" + os.Getenv("MODELS_HOST") + ":8501/v1/models/universal_encoder:predict",
 		"application/json",
 		reqBody,
 	)

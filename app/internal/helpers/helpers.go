@@ -4,26 +4,21 @@ import (
 	"log"
 	"os"
 
+	"backend/app/internal/structs"
+
 	"github.com/kelseyhightower/envconfig"
 	"gopkg.in/yaml.v2"
 )
 
-type Config struct {
-	Elastic struct {
-		Host string `yaml:"host"`
-		Port int `yaml:"port"`
-		User string `yaml:"user"`
-		Password string `yaml:"password"`
-	}`yaml:"elastic"`
-}
 
+type Config = structs.Config
 
 func LoadConfigs() Config {
 	var cfg Config
 
 	// Read config file
 	pwd, err := os.Getwd()
-	file, err := os.Open(pwd + "/local.config.yml")
+	file, err := os.Open(pwd + "/config/local.config.yml")
 
 	// Handle errors
 	defer func(file *os.File) {

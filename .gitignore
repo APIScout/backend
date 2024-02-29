@@ -23,6 +23,6 @@ go.work
 
 ca.crt
 *.config.yml
-!template.config.yml
+!config/template.config.yml
 models/*
 !.keep

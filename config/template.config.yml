@@ -1,3 +1,6 @@
+# Server Configurations
+backend:
+  port: 8080
 # ElasticSearch Credentials
 elastic:
   host: ""
