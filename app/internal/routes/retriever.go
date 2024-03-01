@@ -2,20 +2,29 @@ package routes
 
 import (
 	"log"
+	"net/http"
 
 	embedding "backend/app/internal/doc-embedding"
+	"backend/app/internal/structs"
 
 	"github.com/gin-gonic/gin"
 )
 
 
-func InitRetrieverRoutes(router * gin.Engine) {
+type EmbeddingRequest = structs.EmbeddingRequest
+
+func InitRetrieverRoutes(router *gin.Engine) {
 	router.POST("/search", Retrieve)
 }
 
 func Retrieve(c *gin.Context) {
-	fragment := c.PostForm("fragment")
+	var body EmbeddingRequest
+	err := c.BindJSON(&body)
 
-	embeddings := embedding.Embed([]string{fragment})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "")
+	}
+
+	embeddings := embedding.EmbedFragment([]string{body.Fragment}, true)
 	log.Print(embeddings)
 }
