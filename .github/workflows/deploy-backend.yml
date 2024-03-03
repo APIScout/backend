@@ -1,0 +1,32 @@
+name: Deploy Backend
+
+on: [ push ]
+
+jobs:
+  tests:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: 'Checkout github action'
+        uses: actions/checkout@v4
+        
+      - name: Setup golang
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
+          
+      - name: Install dependencies
+        run: |
+          go install gotest.tools/gotestsum@latest
+          go get ./...
+        
+      - name: Build
+        run: go build -o . ./...
+        
+      - name: Run Tests
+        run: gotestsum --hide-summary=skipped ./app/tests/... > tests-result.json
+        
+      - name: Upload tests result
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-result
+          path: tests-result.json
