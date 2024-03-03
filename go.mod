@@ -3,25 +3,26 @@ module backend
 go 1.22
 
 require (
-	github.com/bbalet/stopwords v1.0.0 // indirect
-	github.com/bytedance/sonic v1.11.1 // indirect
+	github.com/bbalet/stopwords v1.0.0
+	github.com/dchest/stemmer v0.0.0-20161207102402-66719a20c4b5
+	github.com/elastic/go-elasticsearch/v8 v8.12.1
+	github.com/gin-gonic/gin v1.9.1
+	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/writeas/go-strip-markdown v2.0.1+incompatible
+	gopkg.in/yaml.v2 v2.4.0
+	github.com/bytedance/sonic v1.11.2 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/chenzhuoyu/iasm v0.9.1 // indirect
-	github.com/dchest/stemmer v0.0.0-20161207102402-66719a20c4b5 // indirect
 	github.com/elastic/elastic-transport-go/v8 v8.4.0 // indirect
-	github.com/elastic/go-elasticsearch/v8 v8.12.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
-	github.com/galeone/tensorflow/tensorflow/go v0.0.0-20221023090153-6b7fa0680c3e // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/gin-gonic/gin v1.9.1 // indirect
-	github.com/go-logr/logr v1.3.0 // indirect
+	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.18.0 // indirect
+	github.com/go-playground/validator/v10 v10.19.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -30,16 +31,14 @@ require (
 	github.com/pelletier/go-toml/v2 v2.1.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
-	github.com/writeas/go-strip-markdown v2.0.1+incompatible // indirect
-	go.opentelemetry.io/otel v1.21.0 // indirect
-	go.opentelemetry.io/otel/metric v1.21.0 // indirect
-	go.opentelemetry.io/otel/trace v1.21.0 // indirect
+	go.opentelemetry.io/otel v1.24.0 // indirect
+	go.opentelemetry.io/otel/metric v1.24.0 // indirect
+	go.opentelemetry.io/otel/trace v1.24.0 // indirect
 	golang.org/x/arch v0.7.0 // indirect
-	golang.org/x/crypto v0.19.0 // indirect
+	golang.org/x/crypto v0.20.0 // indirect
 	golang.org/x/net v0.21.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/protobuf v1.32.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

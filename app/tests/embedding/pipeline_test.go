@@ -1,12 +1,17 @@
 package embedding
 
 import (
+	"os"
 	"testing"
 
 	"backend/app/internal/embedding"
 )
 
 func TestPipelineEmptyString(t *testing.T) {
+	if os.Getenv("MODELS_HOST") == "" {
+		t.Skip("Skipping testing in CI environment")
+	}
+
 	fragments := []string{""}
 	res := embedding.PerformPipeline(fragments, true)
 
@@ -16,6 +21,10 @@ func TestPipelineEmptyString(t *testing.T) {
 }
 
 func TestPipelineEmptyArray(t *testing.T) {
+	if os.Getenv("MODELS_HOST") == "" {
+		t.Skip("Skipping testing in CI environment")
+	}
+
 	var fragments []string
 	res := embedding.PerformPipeline(fragments, true)
 
@@ -25,6 +34,10 @@ func TestPipelineEmptyArray(t *testing.T) {
 }
 
 func TestPipelineQuery(t *testing.T) {
+	if os.Getenv("MODELS_HOST") == "" {
+		t.Skip("Skipping testing in CI environment")
+	}
+
 	fragments := []string{"this is a test query"}
 	res := embedding.PerformPipeline(fragments, true)
 
@@ -34,6 +47,10 @@ func TestPipelineQuery(t *testing.T) {
 }
 
 func TestPipelineQueries(t *testing.T) {
+	if os.Getenv("MODELS_HOST") == "" {
+		t.Skip("Skipping testing in CI environment")
+	}
+
 	fragments := []string{"this is a test query", "this is another different test query"}
 	res := embedding.PerformPipeline(fragments, true)
 
@@ -43,6 +60,10 @@ func TestPipelineQueries(t *testing.T) {
 }
 
 func TestPipelineDocument(t *testing.T) {
+	if os.Getenv("MODELS_HOST") == "" {
+		t.Skip("Skipping testing in CI environment")
+	}
+
 	fragments := []string{"{\n  \"openapi\": \"3.0.0\",\n  \"info\": {\n    \"title\": \"test title\",\n    \"description\": \"test description\",\n    \"version\": \"0.0.1\",\n    \"summary\": 'test \"summary\"'\n  }\n}"}
 	res := embedding.PerformPipeline(fragments, false)
 
@@ -52,6 +73,10 @@ func TestPipelineDocument(t *testing.T) {
 }
 
 func TestPipelineDocuments(t *testing.T) {
+	if os.Getenv("MODELS_HOST") == "" {
+		t.Skip("Skipping testing in CI environment")
+	}
+
 	fragments := []string{"{\n  \"openapi\": \"3.0.0\",\n  \"info\": {\n    \"title\": \"test title\",\n    \"description\": \"test description\",\n    \"version\": \"0.0.1\",\n    \"summary\": 'test \"summary\"'\n  }\n}", "\"version\": \"0.0.1\""}
 	res := embedding.PerformPipeline(fragments, false)
 
