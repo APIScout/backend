@@ -6,9 +6,9 @@ services:
     networks:
       - be-network
     volumes:
-      - ./models/universal-encoder:/models/universal_encoder
+      - ./models/universal-encoder:/models/universal-encoder
     environment:
-      MODEL_NAME: "universal_encoder"
+      MODEL_NAME: "universal-encoder"
 
   backend:
     image: api-scout-backend:latest

@@ -1,13 +1,12 @@
-package doc_embedding
+package embedding
 
 import (
+	"backend/app/internal/structs"
 	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
 	"os"
-
-	"backend/app/internal/structs"
 )
 
 
@@ -21,7 +20,7 @@ func Embed(fragments []string) *Embeddings {
 	// Call embedding model
 	reqBody := bytes.NewBuffer(body)
 	res, err := http.Post(
-		"http://" + os.Getenv("MODELS_HOST") + ":8501/v1/models/universal_encoder:predict",
+		"http://" + os.Getenv("MODELS_HOST") + ":8501/v1/models/universal-encoder:predict",
 		"application/json",
 		reqBody,
 	)

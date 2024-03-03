@@ -1,7 +1,7 @@
-package doc_embedding
+package embedding
 
 
-func EmbedFragment(fragments []string, isQuery bool) *Embeddings {
+func PerformPipeline(fragments []string, isQuery bool) *Embeddings {
 	preprocessed := PreprocessFragment(fragments, isQuery)
 	embeddings := Embed(preprocessed)
 
