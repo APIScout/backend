@@ -1,4 +1,4 @@
-name: Deploy Backend
+name: Test and Deploy Backend
 
 on: [ push, pull_request ]
 

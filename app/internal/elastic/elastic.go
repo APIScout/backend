@@ -2,28 +2,28 @@ package elastic
 
 import (
 	"fmt"
-	"os"
+
+	"backend/app/internal/helpers"
+	"backend/app/internal/structs"
 
 	"github.com/elastic/go-elasticsearch/v8"
 )
 
-
-func Connect(host string, port int, user string, password string) (*elasticsearch.Client, error) {
+func Connect(config structs.Elastic) *elasticsearch.Client {
 	esConfig := elasticsearch.Config{
 		Addresses: []string{
-			fmt.Sprintf("https://%s:%d", host, port),
+			fmt.Sprintf("%s://%s:%d", config.Protocol, config.Host, config.Port),
 		},
-		Username: user,
-		Password: password,
-		CACert:   GetCertificate(),
+		Username: config.User,
+		Password: config.Password,
+		CACert:   helpers.GetCertificate(),
 	}
 
-	return elasticsearch.NewClient(esConfig)
-}
+	client, err := elasticsearch.NewClient(esConfig)
 
-func GetCertificate() []byte {
-	pwd, _ := os.Getwd()
-	cert, _ := os.ReadFile(pwd + "/ca.crt")
+	if err != nil {
+		panic(err)
+	}
 
-	return cert
+	return client
 }

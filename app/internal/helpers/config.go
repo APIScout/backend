@@ -10,7 +10,6 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-
 type Config = structs.Config
 
 func LoadConfigs() Config {

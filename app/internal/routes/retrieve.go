@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 type EmbeddingRequest = structs.EmbeddingRequest
 
 func InitRetrieverRoutes(router *gin.Engine) {

@@ -9,7 +9,6 @@ import (
 	"os"
 )
 
-
 type Embeddings = structs.Embeddings
 
 func Embed(fragments []string) *Embeddings {
@@ -20,7 +19,7 @@ func Embed(fragments []string) *Embeddings {
 	// Call embedding model
 	reqBody := bytes.NewBuffer(body)
 	res, err := http.Post(
-		"http://" + os.Getenv("MODELS_HOST") + ":8501/v1/models/universal-encoder:predict",
+		"http://"+os.Getenv("MODELS_HOST")+":8501/v1/models/universal-encoder:predict",
 		"application/json",
 		reqBody,
 	)

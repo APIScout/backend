@@ -10,7 +10,6 @@ import (
 	stripmd "github.com/writeas/go-strip-markdown"
 )
 
-
 func PreprocessFragment(fragments []string, isQuery bool) []string {
 	cleanFragment := fragments
 
@@ -61,7 +60,7 @@ func StopWordRemoval(fragments []string) []string {
 
 func Stemming(fragments []string) []string {
 	var stemmed []string
-	f := func (r rune) bool { return unicode.IsSpace(r) }
+	f := func(r rune) bool { return unicode.IsSpace(r) }
 
 	for _, fragment := range fragments {
 		var stemmedWords []string
