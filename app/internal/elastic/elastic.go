@@ -2,6 +2,7 @@ package elastic
 
 import (
 	"fmt"
+	"log"
 
 	"backend/app/internal/helpers"
 	"backend/app/internal/structs"
@@ -24,6 +25,7 @@ func Connect(config structs.Elastic) *elasticsearch.Client {
 	if err != nil {
 		panic(err)
 	}
+	log.Print("Connected to ElasticSearch")
 
 	return client
 }

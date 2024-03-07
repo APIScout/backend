@@ -25,5 +25,5 @@ func Search(c *gin.Context) {
 	}
 
 	embeddings := embedding.PerformPipeline([]string{body.Fragment}, true)
-	log.Print(embeddings)
+	log.Print(len(embeddings.Predictions[0]))
 }
