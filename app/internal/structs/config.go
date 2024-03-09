@@ -1,16 +1,19 @@
 package structs
 
+// Config - used to store all configurations needed by the backend.
 type Config struct {
-	Backend Backend `yaml:"backend"`
-	Mongo   Mongo   `yaml:"mongodb"`
-	Elastic Elastic `yaml:"elastic"`
+	Backend BackendConfig `yaml:"backend"`
+	Mongo   MongoConfig   `yaml:"mongodb"`
+	Elastic ElasticConfig `yaml:"elastic"`
 }
 
-type Backend struct {
+// BackendConfig - all backend-related configurations.
+type BackendConfig struct {
 	Port int `yaml:"port"`
 }
 
-type Mongo struct {
+// MongoConfig - all mongodb-related configurations.
+type MongoConfig struct {
 	Protocol string `yaml:"protocol"`
 	Host     string `yaml:"host"`
 	Port     int    `yaml:"port"`
@@ -18,7 +21,8 @@ type Mongo struct {
 	Password string `yaml:"password"`
 }
 
-type Elastic struct {
+// ElasticConfig - all elasticsearch-related configurations.
+type ElasticConfig struct {
 	Protocol string `yaml:"protocol"`
 	Host     string `yaml:"host"`
 	Port     int    `yaml:"port"`

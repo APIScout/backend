@@ -1,0 +1,3 @@
+pagefind
+out ../../docs/go
+home backend/app/internal/

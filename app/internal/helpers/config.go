@@ -12,6 +12,7 @@ import (
 
 type Config = structs.Config
 
+// LoadConfigs - parse and store in a struct all the config values needed by the backend.
 func LoadConfigs() Config {
 	var cfg Config
 

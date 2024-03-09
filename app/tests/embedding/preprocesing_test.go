@@ -7,7 +7,6 @@ import (
 	"backend/app/internal/embedding"
 )
 
-
 func TestPreprocessEmptyString(t *testing.T) {
 	fragments := []string{""}
 	res := embedding.PreprocessFragment(fragments, true)
@@ -17,7 +16,7 @@ func TestPreprocessEmptyString(t *testing.T) {
 	}
 }
 
-func TestPreprocessEmptyArray(t *testing.T)  {
+func TestPreprocessEmptyArray(t *testing.T) {
 	var fragments []string
 	res := embedding.PreprocessFragment(fragments, true)
 

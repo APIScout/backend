@@ -10,6 +10,9 @@ import (
 	stripmd "github.com/writeas/go-strip-markdown"
 )
 
+// PreprocessFragment - fragments are preprocessed by running a standard NLP pipeline, composed of string cleaning,
+// stop-word removal, and stemming. An array of fragments (string), and a boolean indicating is the fragments are
+// queries or not need to be passed to the function.
 func PreprocessFragment(fragments []string, isQuery bool) []string {
 	cleanFragment := fragments
 
@@ -20,6 +23,8 @@ func PreprocessFragment(fragments []string, isQuery bool) []string {
 	return Stemming(StopWordRemoval(cleanFragment))
 }
 
+// ExtractTags - extract the NL tags from a fragment (JSON document documenting a REST API), and return an array of
+// strings, one for each fragment. An array of fragments needs to be passed to the function.
 func ExtractTags(fragments []string) []string {
 	var nlFragments []string
 	nlTagsRegex := regexp.MustCompile(`['"](?:description|name|title|summary)['"]:\s"([^"]+)"|'([^']+)'`)
@@ -45,6 +50,8 @@ func ExtractTags(fragments []string) []string {
 	return nlFragments
 }
 
+// StopWordRemoval - remove all stopwords from the given strings. An array of strings needs to be passed to the
+// function.
 func StopWordRemoval(fragments []string) []string {
 	var newFragments []string
 
@@ -58,6 +65,8 @@ func StopWordRemoval(fragments []string) []string {
 	return newFragments
 }
 
+// Stemming - stem all the words contained in the given strings. An array of strings needs to be passed to the
+// function.
 func Stemming(fragments []string) []string {
 	var stemmed []string
 	f := func(r rune) bool { return unicode.IsSpace(r) }

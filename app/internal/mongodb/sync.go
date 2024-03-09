@@ -3,7 +3,6 @@ package mongodb
 import (
 	"context"
 	"fmt"
-	"github.com/elastic/go-elasticsearch/v8"
 	"log"
 	"time"
 
@@ -11,12 +10,15 @@ import (
 	"backend/app/internal/embedding"
 	"backend/app/internal/structs"
 
+	"github.com/elastic/go-elasticsearch/v8"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// WatchDatabase - watch for a certain type of events in the mongodb `apis` database. The supported events are
+// document insertion and document deletion.
 func WatchDatabase(client *mongo.Client, esClient *elasticsearch.Client, operation string) {
 	db := client.Database("apis")
 	match := bson.D{{"$match", bson.D{{"operationType", operation}}}}
@@ -36,54 +38,56 @@ func WatchDatabase(client *mongo.Client, esClient *elasticsearch.Client, operati
 	}
 }
 
+// InsertDocuments - every time a document is inserted in the database, it will be taken from mongodb, embedded, and
+// saved in the respective elasticsearch index.
 func InsertDocuments(esClient *elasticsearch.Client, stream *mongo.ChangeStream, database *mongo.Database) {
 	for stream.Next(context.TODO()) {
-		document := RetrieveDocument(stream, database)
+		var document structs.SyncDocument
+		// Retrieve the mongo document id
+		err := stream.Current.Lookup("documentKey").Unmarshal(&document)
+
+		if err != nil {
+			panic(err)
+		}
+
+		// Retrieve the mongo document collection
+		err = stream.Current.Lookup("ns").Unmarshal(&document)
+
+		if err != nil {
+			panic(err)
+		}
+
+		// Create ObjectId for mongodb query
+		docId, err := primitive.ObjectIDFromHex(document.Id)
+
+		if err != nil {
+			panic(err)
+		}
+
+		query := bson.M{"_id": docId}
+		document.Api = SearchDocument(database, query, document.Collection)
+
 		embeddings := embedding.PerformPipeline([]string{document.Api}, false)
-		esDocument := elastic.ParseEmbedding(document, embeddings)
+		esDocument := elastic.ParseEmbedding(&document, embeddings)
 		// TODO: Change index name
 		elastic.SendDocument(esClient, esDocument, "test")
 	}
 }
 
+// DeleteDocuments - every time a documents is deleted from the database, it will be searched in the elasticsearch
+// index (based on the mongodb ObjectId) and deleted from the elasticsearch database.
 func DeleteDocuments(esClient *elasticsearch.Client, stream *mongo.ChangeStream, database *mongo.Database) {
 	for stream.Next(context.TODO()) {
-		document := RetrieveDocument(stream, database)
-		query := fmt.Sprintf(`{"query": {"match": {"mongo_id": "%s"}}}`, document.Id)
+		var specification structs.SyncDocument
+		err := stream.Current.Lookup("documentKey").Unmarshal(&specification)
 
+		if err != nil {
+			panic(err)
+		}
+
+		query := fmt.Sprintf(`{"query": {"match": {"mongo_id": "%s"}}}`, specification.Id)
 		// TODO: Change index name
 		elastic.SearchDocument(esClient, query, "test")
+		//elastic.DeleteDocument(esClient, esDocument.)
 	}
-}
-
-func RetrieveDocument(stream *mongo.ChangeStream, db *mongo.Database) *structs.SyncDocument {
-	var specification structs.SyncDocument
-	err := stream.Current.Lookup("documentKey").Unmarshal(&specification)
-
-	if err != nil {
-		panic(err)
-	}
-
-	err = stream.Current.Lookup("ns").Unmarshal(&specification)
-
-	if err != nil {
-		panic(err)
-	}
-
-	id, err := primitive.ObjectIDFromHex(specification.Id)
-
-	if err != nil {
-		panic(err)
-	}
-
-	coll := db.Collection(specification.Collection)
-	res, err := coll.FindOne(context.Background(), bson.M{"_id": id}).Raw()
-
-	if err != nil {
-		panic(err)
-	}
-
-	specification.Api = fmt.Sprint(res)
-
-	return &specification
 }

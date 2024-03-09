@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="doc2go">
+    <link href="../_/css/main.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../_/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../_/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="../_/icons/favicon.ico"><link href="../_/pagefind/pagefind-ui.css" rel="stylesheet">
+<script src="../_/pagefind/pagefind-ui.js"></script><title>helpers</title>
+</head>
+  <body>
+    <nav>
+        <a href="..">backend/app/internal</a>/helpers<span class="navbar-right">
+          <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+      </nav>
+    <div id="search"></div><main
+      data-pagefind-body
+      data-pagefind-filter="Visibility:Internal"><h2 id="pkg-overview" data-pagefind-meta="Import path:backend/app/internal/helpers">package helpers</h2>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;backend/app/internal/helpers&#34;</span></pre>
+<h3 id="pkg-index" data-pagefind-ignore>Index</h3>
+<ul data-pagefind-ignore>
+  <li><a href="#GetCertificate">func GetCertificate() []byte</a></li>
+  <li>
+      <a href="#Config">type Config</a>
+      <ul>
+          <li><a href="#LoadConfigs">func LoadConfigs() Config</a></li>
+          </ul>
+      </li>
+  </ul><h3 id="pkg-functions" data-pagefind-ignore>Functions</h3>
+  <h3 id="GetCertificate">func GetCertificate</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">GetCertificate</span><span class="p">()</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a></pre>
+    <p>GetCertificate - retrieve the elasticsearch cluster certificate.
+<h3 id="pkg-types" data-pagefind-ignore>Types</h3>
+  <h3 id="Config">type Config</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Config</span> <span class="p">=</span> <a href="../structs"><span class="nx">structs</span></a><span class="p">.</span><a href="../structs#Config"><span class="nx">Config</span></a></pre>
+    <h4 id="LoadConfigs">func LoadConfigs</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="nf">LoadConfigs</span><span class="p">()</span> <a href="#Config"><span class="nx">Config</span></a></pre>
+  <p>LoadConfigs - parse and store in a struct all the config values needed by the backend.
+</main>
+    <hr>
+    <footer>
+      <small id="generated-by-footer">
+        Generated with <a href="https://abhinav.github.io/doc2go/">doc2go</a>
+      </small>
+    </footer>
+    <script src="../_/js/permalink.js"></script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    var path = window.location.pathname;
+    if (!path.endsWith("/")) { path += "/"; }
+    path += "..";
+
+    new PagefindUI({
+      element: "#search",
+      showSubResults: true,
+      baseUrl: path,
+    });
+  });
+</script></body>
+</html>

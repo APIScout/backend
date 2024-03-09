@@ -7,7 +7,6 @@ import (
 	"backend/app/internal/embedding"
 )
 
-
 func TestExtractEmptyString(t *testing.T) {
 	fragments := []string{""}
 	res := embedding.ExtractTags(fragments)
@@ -17,7 +16,7 @@ func TestExtractEmptyString(t *testing.T) {
 	}
 }
 
-func TestExtractEmptyArray(t *testing.T)  {
+func TestExtractEmptyArray(t *testing.T) {
 	var fragments []string
 	res := embedding.ExtractTags(fragments)
 

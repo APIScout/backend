@@ -12,7 +12,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 func main() {
 	cfg := helpers.LoadConfigs()
 
@@ -20,6 +19,7 @@ func main() {
 	elasticClient := elastic.Connect(cfg.Elastic)
 	// Run the sync pipeline on a different goroutine
 	go mongodb.WatchDatabase(mongoClient, elasticClient, "insert")
+	go mongodb.WatchDatabase(mongoClient, elasticClient, "delete")
 
 	router := gin.Default()
 	routes.InitRoutes(router)

@@ -1,16 +1,19 @@
 package embedding
 
 import (
-	"backend/app/internal/structs"
 	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
 	"os"
+
+	"backend/app/internal/structs"
 )
 
-type Embeddings = structs.Embeddings
+type Embeddings = structs.EmbeddingResponse
 
+// Embed use the Universal Sentence Encoder model to transform the array of fragments (string) into an array of
+// embeddings (512-dimension float32 embedding). A list of embeddings needs to be passed to the function.
 func Embed(fragments []string) *Embeddings {
 	body, _ := json.Marshal(map[string][]string{
 		"instances": fragments,
