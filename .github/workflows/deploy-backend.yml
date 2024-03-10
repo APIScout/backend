@@ -20,7 +20,7 @@ jobs:
           go get ./...
         
       - name: Build
-        run: go build -o . ./...
+        run: go build -o ./main ./app
         
       - name: Run Tests
         run: gotestsum --hide-summary=skipped ./app/tests/... > tests-result.txt
