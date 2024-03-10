@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="doc2go">
+    <link href="../_/css/main.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../_/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../_/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="../_/icons/favicon.ico"><link href="../_/pagefind/pagefind-ui.css" rel="stylesheet">
+<script src="../_/pagefind/pagefind-ui.js"></script><title>mongodb</title>
+</head>
+  <body>
+    <nav>
+        <a href="..">backend/app/internal</a>/mongodb<span class="navbar-right">
+          <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+      </nav>
+    <div id="search"></div><main
+      data-pagefind-body
+      data-pagefind-filter="Visibility:Internal"><h2 id="pkg-overview" data-pagefind-meta="Import path:backend/app/internal/mongodb">package mongodb</h2>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;backend/app/internal/mongodb&#34;</span></pre>
+<h3 id="pkg-index" data-pagefind-ignore>Index</h3>
+<ul data-pagefind-ignore>
+  <li><a href="#Connect">func Connect(config models.MongoConfig) *mongo.Client</a></li>
+  <li><a href="#DeleteDocuments">func DeleteDocuments(esClient *elasticsearch.Client, stream *mongo.ChangeStream, ...)</a></li>
+  <li><a href="#InsertDocuments">func InsertDocuments(esClient *elasticsearch.Client, stream *mongo.ChangeStream, ...)</a></li>
+  <li><a href="#SearchDocument">func SearchDocument(database *mongo.Database, query bson.M, collection string) string</a></li>
+  <li><a href="#WatchDatabase">func WatchDatabase(client *mongo.Client, esClient *elasticsearch.Client, operation string)</a></li>
+  </ul><h3 id="pkg-functions" data-pagefind-ignore>Functions</h3>
+  <h3 id="Connect">func Connect</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">Connect</span><span class="p">(</span><span class="nx">config</span> <a href="../models"><span class="nx">models</span></a><span class="p">.</span><a href="../models#MongoConfig"><span class="nx">MongoConfig</span></a><span class="p">)</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#Client"><span class="nx">Client</span></a></pre>
+    <p>Connect - used to connect to the mongodb database. It will return a mongodb client that can be used to perform
+queries on the database.
+<h3 id="DeleteDocuments">func DeleteDocuments</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">DeleteDocuments</span><span class="p">(</span><span class="nx">esClient</span> <span class="o">*</span><a href="https://pkg.go.dev/github.com/elastic/go-elasticsearch/v8"><span class="nx">elasticsearch</span></a><span class="p">.</span><a href="https://pkg.go.dev/github.com/elastic/go-elasticsearch/v8#Client"><span class="nx">Client</span></a><span class="p">,</span> <span class="nx">stream</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#ChangeStream"><span class="nx">ChangeStream</span></a><span class="p">,</span> <span class="nx">database</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#Database"><span class="nx">Database</span></a><span class="p">)</span></pre>
+    <p>DeleteDocuments - every time a documents is deleted from the database, it will be searched in the elasticsearch
+index (based on the mongodb ObjectId) and deleted from the elasticsearch database.
+<h3 id="InsertDocuments">func InsertDocuments</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">InsertDocuments</span><span class="p">(</span><span class="nx">esClient</span> <span class="o">*</span><a href="https://pkg.go.dev/github.com/elastic/go-elasticsearch/v8"><span class="nx">elasticsearch</span></a><span class="p">.</span><a href="https://pkg.go.dev/github.com/elastic/go-elasticsearch/v8#Client"><span class="nx">Client</span></a><span class="p">,</span> <span class="nx">stream</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#ChangeStream"><span class="nx">ChangeStream</span></a><span class="p">,</span> <span class="nx">database</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#Database"><span class="nx">Database</span></a><span class="p">)</span></pre>
+    <p>InsertDocuments - every time a document is inserted in the database, it will be taken from mongodb, embedded, and
+saved in the respective elasticsearch index.
+<h3 id="SearchDocument">func SearchDocument</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">SearchDocument</span><span class="p">(</span><span class="nx">database</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#Database"><span class="nx">Database</span></a><span class="p">,</span> <span class="nx">query</span> <a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/bson"><span class="nx">bson</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/bson#M"><span class="nx">M</span></a><span class="p">,</span> <span class="nx">collection</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+    <p>SearchDocument - search a document in a collection based on a query. A mongodb database, a query and a collection
+need to be passed to the function.
+<h3 id="WatchDatabase">func WatchDatabase</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">WatchDatabase</span><span class="p">(</span><span class="nx">client</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#Client"><span class="nx">Client</span></a><span class="p">,</span> <span class="nx">esClient</span> <span class="o">*</span><a href="https://pkg.go.dev/github.com/elastic/go-elasticsearch/v8"><span class="nx">elasticsearch</span></a><span class="p">.</span><a href="https://pkg.go.dev/github.com/elastic/go-elasticsearch/v8#Client"><span class="nx">Client</span></a><span class="p">,</span> <span class="nx">operation</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span></pre>
+    <p>WatchDatabase - watch for a certain type of events in the mongodb `apis` database. The supported events are
+document insertion and document deletion.
+</main>
+    <hr>
+    <footer>
+      <small id="generated-by-footer">
+        Generated with <a href="https://abhinav.github.io/doc2go/">doc2go</a>
+      </small>
+    </footer>
+    <script src="../_/js/permalink.js"></script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    var path = window.location.pathname;
+    if (!path.endsWith("/")) { path += "/"; }
+    path += "..";
+
+    new PagefindUI({
+      element: "#search",
+      showSubResults: true,
+      baseUrl: path,
+    });
+  });
+</script></body>
+</html>
