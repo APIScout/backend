@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -18,7 +19,7 @@ func LoadConfigs() Config {
 
 	// Read config file
 	pwd, err := os.Getwd()
-	file, err := os.Open(pwd + "/config/local.config.yml")
+	file, err := os.Open(pwd + fmt.Sprintf("/config/%s.config.yml", os.Getenv("GIN_MODE")))
 
 	// Handle errors
 	defer func(file *os.File) {

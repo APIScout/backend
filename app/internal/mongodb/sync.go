@@ -64,6 +64,8 @@ func InsertDocuments(esClient *elasticsearch.Client, stream *mongo.ChangeStream,
 			panic(err)
 		}
 
+		// TODO: If dealing with the `github` collection, look for the `latest` tag
+
 		query := bson.M{"_id": docId}
 		document.Api = SearchDocument(database, query, document.Collection)
 
@@ -87,7 +89,10 @@ func DeleteDocuments(esClient *elasticsearch.Client, stream *mongo.ChangeStream,
 
 		query := fmt.Sprintf(`{"query": {"match": {"mongo_id": "%s"}}}`, specification.Id)
 		// TODO: Change index name
-		elastic.SearchDocument(esClient, query, "test")
-		//elastic.DeleteDocument(esClient, esDocument.)
+		response := elastic.SearchDocument(esClient, query, "test")
+
+		for _, document := range response.Hits.Hits {
+			elastic.DeleteDocument(esClient, document.Id, document.Index)
+		}
 	}
 }

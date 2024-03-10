@@ -3,20 +3,33 @@ services:
   models:
     image: tensorflow/serving
     container_name: models
+    environment:
+      MODEL_NAME: "universal-encoder"
     networks:
       - be-network
     volumes:
       - ./models/universal-encoder:/models/universal-encoder
-    environment:
-      MODEL_NAME: "universal-encoder"
 
   backend:
     image: api-scout-backend:latest
     container_name: backend
+    environment:
+      GIN_MODE: "release"
+      MODELS_HOST: "models"
     networks:
       - be-network
+      - mongo-network
+      - elastic-network
     ports:
       - "8080:8080"
+    volumes:
+      - ./config:/backend/config
 networks:
   be-network:
     driver: bridge
+  mongo-network:
+    name: mongo_mongo-network
+    external: true
+  elastic-network:
+    name: elastic_es-network
+    external: true

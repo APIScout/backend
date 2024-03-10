@@ -6,17 +6,18 @@ COPY go.* ./
 RUN go mod download
 
 COPY . .
-RUN go build -o /backend/build/app ./app
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+RUN cd app && swag init
+RUN go build -o /backend/build/app /backend/app
 
 FROM alpine:latest
 
 WORKDIR /backend
 
-ENV GIN_MODE="release"
-ENV MODELS_HOST="models"
+ARG GIN_MODE
+ARG MODELS_HOST
 
 COPY --from=builder /backend/build/app /backend/build/app
-COPY --from=builder /backend/config /backend/config
 
 EXPOSE 8080
 ENTRYPOINT [ "/backend/build/app" ]

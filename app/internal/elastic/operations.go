@@ -3,6 +3,7 @@ package elastic
 import (
 	"bytes"
 	"context"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -10,7 +11,6 @@ import (
 	"backend/app/internal/models"
 
 	"github.com/elastic/go-elasticsearch/v8"
-	"github.com/elastic/go-elasticsearch/v8/esapi"
 	"github.com/goccy/go-json"
 )
 
@@ -23,38 +23,48 @@ func SendDocument(client *elasticsearch.Client, document *models.EsDocument, ind
 		panic(err)
 	}
 
-	response, err := client.Index(index, bytes.NewReader(jsonDocument))
+	res, err := client.Index(index, bytes.NewReader(jsonDocument))
 
 	if err != nil {
 		return
 	}
 
 	if os.Getenv("GIN_MODE") == "debug" {
-		log.Printf("[ELASTIC-debug] %s", response.String())
+		log.Printf("[ELASTIC-debug] Indexing: %s", res.Status())
 	}
 }
 
 // SearchDocument - search a document in an index based on a query. An elasticsearch client, a query and an index need
 // to be passed to the function.
-func SearchDocument(client *elasticsearch.Client, query string, index string) *models.EsDocument {
-	var response models.EsDocument
-	request := esapi.SearchRequest{
-		Index: []string{index},
-		Body:  strings.NewReader(query),
-	}
+func SearchDocument(client *elasticsearch.Client, query string, index string) *models.EsSearchResponse {
+	var response models.EsSearchResponse
 
-	res, err := request.Do(context.TODO(), client)
+	res, err := client.Search(
+		client.Search.WithIndex(index),
+		client.Search.WithBody(strings.NewReader(query)),
+		client.Search.WithContext(context.TODO()),
+	)
 
 	if err != nil {
 		panic(err)
 	}
 
 	if os.Getenv("GIN_MODE") == "debug" {
-		log.Printf("[ELASTIC-debug] %s", res.Status())
+		log.Printf("[ELASTIC-debug] Search: %s", res.Status())
 	}
 
-	//bson.NewDecoder(res)
-	log.Print(response)
+	// Read the body of the elasticsearch response
+	out := new(bytes.Buffer)
+	b1 := bytes.NewBuffer([]byte{})
+	tr := io.TeeReader(res.Body, b1)
+	_, err = out.ReadFrom(tr)
+
+	if err != nil {
+		panic(err)
+	}
+
+	// Unmarshal the byte array into the response
+	err = json.Unmarshal([]byte(out.String()), &response)
 
 	if err != nil {
 		panic(err)
@@ -66,13 +76,13 @@ func SearchDocument(client *elasticsearch.Client, query string, index string) *m
 // DeleteDocument - delete a document in an index based on its id. An elasticsearch client, an id and an index need to
 // be passed to the function.
 func DeleteDocument(client *elasticsearch.Client, id string, index string) {
-	response, err := client.Delete(index, id)
+	res, err := client.Delete(index, id)
 
 	if err != nil {
 		return
 	}
 
 	if os.Getenv("GIN_MODE") == "debug" {
-		log.Printf("[ELASTIC-debug] %s", response.String())
+		log.Printf("[ELASTIC-debug] Delete: %s", res.Status())
 	}
 }

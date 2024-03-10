@@ -11,7 +11,7 @@ type SyncDocument struct {
 	Api        string
 }
 
-// EsDocument - structure of an elasticsearch document returned by the elasticsearch client.
+// EsDocument - structure of an elasticsearch document to be sent to the elasticsearch client.
 type EsDocument struct {
 	MongoId    primitive.ObjectID `json:"mongo_id"`
 	Collection string             `json:"mongo_collection"`
