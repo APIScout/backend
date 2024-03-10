@@ -5,14 +5,14 @@ import (
 	"log"
 
 	"backend/app/internal/helpers"
-	"backend/app/internal/structs"
+	"backend/app/internal/models"
 
 	"github.com/elastic/go-elasticsearch/v8"
 )
 
 // Connect - used to connect to the elasticsearch database. It will return an elasticsearch client that can be used to
 // perform queries on the database.
-func Connect(config structs.ElasticConfig) *elasticsearch.Client {
+func Connect(config models.ElasticConfig) *elasticsearch.Client {
 	esConfig := elasticsearch.Config{
 		Addresses: []string{
 			fmt.Sprintf("%s://%s:%d", config.Protocol, config.Host, config.Port),

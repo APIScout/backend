@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"backend/app/internal/structs"
+	"backend/app/internal/models"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -13,7 +13,7 @@ import (
 
 // Connect - used to connect to the mongodb database. It will return a mongodb client that can be used to perform
 // queries on the database.
-func Connect(config structs.MongoConfig) *mongo.Client {
+func Connect(config models.MongoConfig) *mongo.Client {
 	ctx := context.TODO()
 	uri := fmt.Sprintf(
 		"%s://%s:%s@%s:%d/?directConnection=true&authSource=apis",

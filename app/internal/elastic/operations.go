@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"backend/app/internal/structs"
+	"backend/app/internal/models"
 
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
@@ -16,7 +16,7 @@ import (
 
 // SendDocument - send and save a document in an elasticsearch index. An elasticsearch client, document and index need
 // to be passed to the function.
-func SendDocument(client *elasticsearch.Client, document *structs.EsDocument, index string) {
+func SendDocument(client *elasticsearch.Client, document *models.EsDocument, index string) {
 	jsonDocument, err := json.Marshal(document)
 
 	if err != nil {
@@ -36,8 +36,8 @@ func SendDocument(client *elasticsearch.Client, document *structs.EsDocument, in
 
 // SearchDocument - search a document in an index based on a query. An elasticsearch client, a query and an index need
 // to be passed to the function.
-func SearchDocument(client *elasticsearch.Client, query string, index string) *structs.EsDocument {
-	var response structs.EsDocument
+func SearchDocument(client *elasticsearch.Client, query string, index string) *models.EsDocument {
+	var response models.EsDocument
 	request := esapi.SearchRequest{
 		Index: []string{index},
 		Body:  strings.NewReader(query),

@@ -11,3 +11,7 @@ repos:
         name: generate-go-docs
         entry: ./scripts/hooks/generate-go-docs.sh
         language: system
+      - id: generate-swagger-docs
+        name: generate-swagger-docs
+        entry: ./scripts/hooks/generate-swagger-docs.sh
+        language: system

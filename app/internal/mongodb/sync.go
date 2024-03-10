@@ -8,7 +8,7 @@ import (
 
 	"backend/app/internal/elastic"
 	"backend/app/internal/embedding"
-	"backend/app/internal/structs"
+	"backend/app/internal/models"
 
 	"github.com/elastic/go-elasticsearch/v8"
 	"go.mongodb.org/mongo-driver/bson"
@@ -42,7 +42,7 @@ func WatchDatabase(client *mongo.Client, esClient *elasticsearch.Client, operati
 // saved in the respective elasticsearch index.
 func InsertDocuments(esClient *elasticsearch.Client, stream *mongo.ChangeStream, database *mongo.Database) {
 	for stream.Next(context.TODO()) {
-		var document structs.SyncDocument
+		var document models.SyncDocument
 		// Retrieve the mongo document id
 		err := stream.Current.Lookup("documentKey").Unmarshal(&document)
 
@@ -78,7 +78,7 @@ func InsertDocuments(esClient *elasticsearch.Client, stream *mongo.ChangeStream,
 // index (based on the mongodb ObjectId) and deleted from the elasticsearch database.
 func DeleteDocuments(esClient *elasticsearch.Client, stream *mongo.ChangeStream, database *mongo.Database) {
 	for stream.Next(context.TODO()) {
-		var specification structs.SyncDocument
+		var specification models.SyncDocument
 		err := stream.Current.Lookup("documentKey").Unmarshal(&specification)
 
 		if err != nil {

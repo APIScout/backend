@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"os"
 
-	"backend/app/internal/structs"
+	"backend/app/internal/models"
 )
 
-type Embeddings = structs.EmbeddingResponse
+type Embeddings = models.EmbeddingResponse
 
 // Embed use the Universal Sentence Encoder model to transform the array of fragments (string) into an array of
 // embeddings (512-dimension float32 embedding). A list of embeddings needs to be passed to the function.

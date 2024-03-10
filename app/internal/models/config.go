@@ -1,4 +1,4 @@
-package structs
+package models
 
 // Config - used to store all configurations needed by the backend.
 type Config struct {

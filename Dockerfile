@@ -6,7 +6,7 @@ COPY go.* ./
 RUN go mod download
 
 COPY . .
-RUN go build -o /backend/build/app ./app/cmd/main
+RUN go build -o /backend/build/app ./app
 
 FROM alpine:latest
 

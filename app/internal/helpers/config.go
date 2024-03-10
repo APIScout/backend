@@ -4,13 +4,13 @@ import (
 	"log"
 	"os"
 
-	"backend/app/internal/structs"
+	"backend/app/internal/models"
 
 	"github.com/kelseyhightower/envconfig"
 	"gopkg.in/yaml.v2"
 )
 
-type Config = structs.Config
+type Config = models.Config
 
 // LoadConfigs - parse and store in a struct all the config values needed by the backend.
 func LoadConfigs() Config {

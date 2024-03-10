@@ -1,4 +1,4 @@
-package structs
+package models
 
 // EmbeddingRequest - structure of the request to be sent to the embedding server.
 type EmbeddingRequest struct {
