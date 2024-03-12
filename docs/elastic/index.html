@@ -24,7 +24,7 @@
 <ul data-pagefind-ignore>
   <li><a href="#Connect">func Connect(config models.ElasticConfig) *elasticsearch.Client</a></li>
   <li><a href="#DeleteDocument">func DeleteDocument(client *elasticsearch.Client, id string, index string)</a></li>
-  <li><a href="#ParseEmbedding">func ParseEmbedding(document *models.SyncDocument, embeddings *models.EmbeddingResponse) *models.EsDocument</a></li>
+  <li><a href="#ParseDocument">func ParseDocument(document *models.SyncDocument, embeddings *models.EmbeddingResponse) *models.EsDocument</a></li>
   <li><a href="#SearchDocument">func SearchDocument(client *elasticsearch.Client, query string, index string) *models.EsSearchResponse</a></li>
   <li><a href="#SendDocument">func SendDocument(client *elasticsearch.Client, document *models.EsDocument, index string)</a></li>
   </ul><h3 id="pkg-functions" data-pagefind-ignore>Functions</h3>
@@ -36,9 +36,9 @@ perform queries on the database.
     <pre class="chroma"><span class="kd">func</span> <span class="nf">DeleteDocument</span><span class="p">(</span><span class="nx">client</span> <span class="o">*</span><a href="https://pkg.go.dev/github.com/elastic/go-elasticsearch/v8"><span class="nx">elasticsearch</span></a><span class="p">.</span><a href="https://pkg.go.dev/github.com/elastic/go-elasticsearch/v8#Client"><span class="nx">Client</span></a><span class="p">,</span> <span class="nx">id</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <span class="nx">index</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span></pre>
     <p>DeleteDocument - delete a document in an index based on its id. An elasticsearch client, an id and an index need to
 be passed to the function.
-<h3 id="ParseEmbedding">func ParseEmbedding</h3>
-    <pre class="chroma"><span class="kd">func</span> <span class="nf">ParseEmbedding</span><span class="p">(</span><span class="nx">document</span> <span class="o">*</span><a href="../models"><span class="nx">models</span></a><span class="p">.</span><a href="../models#SyncDocument"><span class="nx">SyncDocument</span></a><span class="p">,</span> <span class="nx">embeddings</span> <span class="o">*</span><a href="../models"><span class="nx">models</span></a><span class="p">.</span><a href="../models#EmbeddingResponse"><span class="nx">EmbeddingResponse</span></a><span class="p">)</span> <span class="o">*</span><a href="../models"><span class="nx">models</span></a><span class="p">.</span><a href="../models#EsDocument"><span class="nx">EsDocument</span></a></pre>
-    <p>ParseEmbedding - converts the SyncDocument returned by the mongo client, as well as the embeddings returned by the
+<h3 id="ParseDocument">func ParseDocument</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">ParseDocument</span><span class="p">(</span><span class="nx">document</span> <span class="o">*</span><a href="../models"><span class="nx">models</span></a><span class="p">.</span><a href="../models#SyncDocument"><span class="nx">SyncDocument</span></a><span class="p">,</span> <span class="nx">embeddings</span> <span class="o">*</span><a href="../models"><span class="nx">models</span></a><span class="p">.</span><a href="../models#EmbeddingResponse"><span class="nx">EmbeddingResponse</span></a><span class="p">)</span> <span class="o">*</span><a href="../models"><span class="nx">models</span></a><span class="p">.</span><a href="../models#EsDocument"><span class="nx">EsDocument</span></a></pre>
+    <p>ParseDocument - converts the SyncDocument returned by the mongo client, as well as the embeddings returned by the
 Universal Sentence Encoder model, into an EsDocument. A mongo document and an embedding need to be passed to the
 function.
 <h3 id="SearchDocument">func SearchDocument</h3>

@@ -70,9 +70,8 @@ func InsertDocuments(esClient *elasticsearch.Client, stream *mongo.ChangeStream,
 		document.Api = SearchDocument(database, query, document.Collection)
 
 		embeddings := embedding.PerformPipeline([]string{document.Api}, false)
-		esDocument := elastic.ParseEmbedding(&document, embeddings)
-		// TODO: Change index name
-		elastic.SendDocument(esClient, esDocument, "test")
+		esDocument := elastic.ParseDocument(&document, embeddings)
+		elastic.SendDocument(esClient, esDocument, "embeddings")
 	}
 }
 
@@ -88,8 +87,7 @@ func DeleteDocuments(esClient *elasticsearch.Client, stream *mongo.ChangeStream,
 		}
 
 		query := fmt.Sprintf(`{"query": {"match": {"mongo_id": "%s"}}}`, specification.Id)
-		// TODO: Change index name
-		response := elastic.SearchDocument(esClient, query, "test")
+		response := elastic.SearchDocument(esClient, query, "embeddings")
 
 		for _, document := range response.Hits.Hits {
 			elastic.DeleteDocument(esClient, document.Id, document.Index)

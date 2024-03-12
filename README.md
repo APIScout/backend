@@ -56,8 +56,7 @@ npm install -g pagefind@latest
 Once all dependencies have been installed, run:
 
 ```shell
-cd app/internal
-doc2go -config ./doc2go.rc  ./...
+doc2go -config ./app/internal/doc2go.rc ./app/internal/...
 ```
 
 ### Consult Documentation
@@ -65,5 +64,5 @@ doc2go -config ./doc2go.rc  ./...
 To consult the documentation of the `app/internal` API, run the following command:
 
 ```shell
-cd docs/go && python -m http.server 8000
+cd docs && python -m http.server 8000
 ```
