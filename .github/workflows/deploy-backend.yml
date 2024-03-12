@@ -1,6 +1,6 @@
-name: Deploy Backend
+name: Test and Deploy Backend
 
-on: [ push, pull_request ]
+on: [ push ]
 
 jobs:
   test:
@@ -20,7 +20,7 @@ jobs:
           go get ./...
         
       - name: Build
-        run: go build -o . ./...
+        run: go build -o ./main ./app
         
       - name: Run Tests
         run: gotestsum --hide-summary=skipped ./app/tests/... > tests-result.txt
@@ -31,4 +31,4 @@ jobs:
           name: tests-result
           path: tests-result.txt
   # deploy:
-  #   if: github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
+  #   if: github.ref == 'refs/heads/main'

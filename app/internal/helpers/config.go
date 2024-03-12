@@ -1,24 +1,25 @@
 package helpers
 
 import (
+	"fmt"
 	"log"
 	"os"
 
-	"backend/app/internal/structs"
+	"backend/app/internal/models"
 
 	"github.com/kelseyhightower/envconfig"
 	"gopkg.in/yaml.v2"
 )
 
+type Config = models.Config
 
-type Config = structs.Config
-
+// LoadConfigs - parse and store in a struct all the config values needed by the backend.
 func LoadConfigs() Config {
 	var cfg Config
 
 	// Read config file
 	pwd, err := os.Getwd()
-	file, err := os.Open(pwd + "/config/local.config.yml")
+	file, err := os.Open(pwd + fmt.Sprintf("/config/%s.config.yml", os.Getenv("GIN_MODE")))
 
 	// Handle errors
 	defer func(file *os.File) {

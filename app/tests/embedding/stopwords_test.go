@@ -7,7 +7,6 @@ import (
 	"backend/app/internal/embedding"
 )
 
-
 func TestStopwordsEmptyString(t *testing.T) {
 	fragments := []string{""}
 	res := embedding.StopWordRemoval(fragments)
@@ -17,7 +16,7 @@ func TestStopwordsEmptyString(t *testing.T) {
 	}
 }
 
-func TestStopwordsEmptyArray(t *testing.T)  {
+func TestStopwordsEmptyArray(t *testing.T) {
 	var fragments []string
 	res := embedding.StopWordRemoval(fragments)
 
