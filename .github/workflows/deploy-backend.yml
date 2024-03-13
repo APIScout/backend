@@ -31,8 +31,7 @@ jobs:
           name: tests-result
           path: tests-result.txt
 
-  deploy-dev:
-    if: github.ref == 'refs/heads/dev'
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -58,5 +57,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-#  deploy-prod:
-#    if: github.ref == 'refs/heads/main'

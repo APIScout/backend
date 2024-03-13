@@ -11,7 +11,7 @@ services:
       - ./models/universal-encoder:/models/universal-encoder
 
   backend:
-    image: api-scout-backend:latest
+    image: edoriggio/api-scout:dev
     container_name: backend
     environment:
       GIN_MODE: "release"
