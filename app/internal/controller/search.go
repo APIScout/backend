@@ -14,20 +14,21 @@ type EmbeddingRequest = models.EmbeddingRequest
 
 // Search godoc
 //	@Summary		Search OpenAPI specifications
-//	@Description	retrieve OpenAPI specifications matching the given query
+//	@Description	Retrieve OpenAPI specifications matching the given query
 //	@Tags			search
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{string} ok
-//	@Failure		400	{string} Bad Request
-//	@Failure		500	{string} Internal Server Error
+//	@Param			fragment	body		models.EmbeddingRequest	true	"Search query"
+//  TODO: Change this
+//	@Success		200			{string}	OK
+//	@Failure		400			{object}	models.HTTPError
 //	@Router			/search [post]
 func Search(ctx *gin.Context) {
 	var body EmbeddingRequest
 	err := ctx.BindJSON(&body)
 
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, "")
+		NewHTTPError(ctx, http.StatusBadRequest, "The query has not been correctly formatted")
 	}
 
 	embeddings := embedding.PerformPipeline([]string{body.Fragment}, true)

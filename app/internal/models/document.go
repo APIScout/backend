@@ -1,6 +1,7 @@
 package models
 
 import (
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -8,7 +9,7 @@ import (
 type SyncDocument struct {
 	Id         string `bson:"_id"`
 	Collection string `bson:"coll"`
-	Api        string
+	Api        bson.Raw
 }
 
 // EsDocument - structure of an elasticsearch document to be sent to the elasticsearch client.

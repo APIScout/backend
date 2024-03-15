@@ -67,9 +67,13 @@ func InsertDocuments(esClient *elasticsearch.Client, stream *mongo.ChangeStream,
 		// TODO: If dealing with the `github` collection, look for the `latest` tag
 
 		query := bson.M{"_id": docId}
-		document.Api = SearchDocument(database, query, document.Collection)
+		document.Api, err = SearchDocument(database, query, document.Collection)
 
-		embeddings := embedding.PerformPipeline([]string{document.Api}, false)
+		if err != nil {
+			panic(err)
+		}
+
+		embeddings := embedding.PerformPipeline([]string{string(document.Api)}, false)
 		esDocument := elastic.ParseDocument(&document, embeddings)
 		elastic.SendDocument(esClient, esDocument, "embeddings")
 	}
