@@ -38,6 +38,10 @@ jobs:
       ', github.ref)
     runs-on: ubuntu-latest
     needs: test
+    if: contains('
+      refs/heads/dev
+      refs/heads/main
+      ', github.ref)
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4

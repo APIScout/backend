@@ -16,7 +16,7 @@ import (
 func Connect(config models.MongoConfig) *mongo.Client {
 	ctx := context.TODO()
 	uri := fmt.Sprintf(
-		"%s://%s:%s@%s:%d/?directConnection=true&authSource=apis",
+		"%s://%s:%s@%s:%d/?authSource=apis",
 		config.Protocol, config.User, config.Password, config.Host, config.Port,
 	)
 	opts := options.Client().ApplyURI(uri)
