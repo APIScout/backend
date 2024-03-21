@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -13,4 +14,11 @@ func SearchDocument(database *mongo.Database, query bson.M, collection string) (
 	res, err := coll.FindOne(context.Background(), query).Raw()
 
 	return res, err
+}
+
+func InsertDocuments(database *mongo.Database, documents []interface{}, collection string) (*mongo.InsertManyResult, error) {
+	coll := database.Collection(collection)
+	ids, err := coll.InsertMany(context.Background(), documents)
+
+	return ids, err
 }

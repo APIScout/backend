@@ -55,7 +55,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/specifications/insert": {
+        "/specification": {
             "post": {
                 "description": "Insert new OpenAPI specifications in the database.",
                 "consumes": [
@@ -70,11 +70,13 @@ const docTemplate = `{
                 "summary": "Insert OpenAPI specifications",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Specification ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
+                        "description": "New Specifications",
+                        "name": "specifications",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SpecificationsRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -100,7 +102,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/specifications/{id}": {
+        "/specification/{id}": {
             "get": {
                 "description": "Retrieve a specific OpenAPI specification's content given a valid ID",
                 "consumes": [
@@ -165,6 +167,21 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "Bad Request"
+                }
+            }
+        },
+        "models.Specification": {
+            "type": "object",
+            "additionalProperties": true
+        },
+        "models.SpecificationsRequest": {
+            "type": "object",
+            "properties": {
+                "specifications": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Specification"
+                    }
                 }
             }
         }

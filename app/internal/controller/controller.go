@@ -20,8 +20,8 @@ func SetupRoutes(router *gin.Engine, config *models.Config) {
 		v1.POST("/search", Search)
 		spec := v1.Group("/specification")
 		{
+			spec.POST("/", PostSpecificationHandler(mongoClient, elasticClient))
 			spec.GET("/:id", GetSpecificationHandler(mongoClient))
-			spec.POST("/insert", PostSpecificationHandler(mongoClient, elasticClient))
 		}
 	}
 
@@ -34,5 +34,5 @@ func NewHTTPError(ctx *gin.Context, status int, message string) {
 		Message: message,
 	}
 
-	ctx.JSON(status, body)
+	ctx.AbortWithStatusJSON(status, body)
 }

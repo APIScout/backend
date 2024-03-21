@@ -10,8 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type EmbeddingRequest = models.EmbeddingRequest
-
 // Search godoc
 //	@Summary		Search OpenAPI specifications
 //	@Description	Retrieve OpenAPI specifications matching the given query
@@ -24,13 +22,18 @@ type EmbeddingRequest = models.EmbeddingRequest
 //	@Failure		400			{object}	models.HTTPError
 //	@Router			/search [post]
 func Search(ctx *gin.Context) {
-	var body EmbeddingRequest
+	var body models.EmbeddingRequest
 	err := ctx.BindJSON(&body)
 
 	if err != nil {
 		NewHTTPError(ctx, http.StatusBadRequest, "The query has not been correctly formatted")
 	}
 
-	embeddings := embedding.PerformPipeline([]string{body.Fragment}, true)
+	embeddings, err := embedding.PerformPipeline([]string{body.Fragment}, true)
+
+	if err != nil {
+		NewHTTPError(ctx, http.StatusBadRequest, "The query has not been correctly formatted")
+	}
+
 	log.Print(len(embeddings.Predictions[0]))
 }
