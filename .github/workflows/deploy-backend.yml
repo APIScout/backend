@@ -32,10 +32,6 @@ jobs:
           path: tests-result.txt
 
   deploy:
-    if: contains('
-      refs/heads/dev
-      refs/heads/main
-      ', github.ref)
     runs-on: ubuntu-latest
     needs: test
     if: contains('
