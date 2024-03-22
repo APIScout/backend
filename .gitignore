@@ -21,7 +21,7 @@ go.work
 .vscode/
 .DS_Store
 
-ca.crt
+*.crt
 *.config.yml
 !config/template.config.yml
 models/*

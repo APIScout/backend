@@ -79,7 +79,7 @@ func Stemming(fragments []string) []string {
 		for _, word := range words {
 			// Perform stemming and append to stemmed words array
 			engStemmer := porter2.Stemmer
-			//Trim non-alphanumeric characters from strin
+			//Trim non-alphanumeric characters from string
 			trimmedWord := strings.TrimFunc(word, func(r rune) bool {
 				return !unicode.IsLetter(r) && !unicode.IsNumber(r)
 			})
