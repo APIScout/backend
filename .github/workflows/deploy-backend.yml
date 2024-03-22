@@ -59,9 +59,6 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          build-args: |
-            "GIN_MODE=release"
-            "MODELS_HOST=models"
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
