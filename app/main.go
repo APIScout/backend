@@ -14,7 +14,7 @@ import (
 //	@version		1.0
 //	@description	This is the backend for the API Scout platform.
 
-// @BasePath	/api/v1
+//	@BasePath	/api/v1
 func main() {
 	cfg := helpers.LoadConfigs()
 

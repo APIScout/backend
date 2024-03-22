@@ -38,6 +38,7 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 
 			if err != nil {
 				NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+				return
 			}
 
 			log.Printf("Mongo ID: %s", document.MongoId)
@@ -52,6 +53,7 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 
 				if err != nil {
 					NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+					return
 				}
 
 				if len(embeddings.Predictions) != 0 {
@@ -63,6 +65,7 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 
 					if err != nil {
 						NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+						return
 					}
 				} else {
 					log.Print("No embedding was produced, skipping")

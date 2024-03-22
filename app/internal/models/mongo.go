@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+// MongoResponse - structure of the Mongo document sent by the db
 type MongoResponse struct {
 	MongoId    string `json:"mongo_id" bson:"_id"`
 	Name       string `json:"name" bson:"_name"`
@@ -16,15 +17,17 @@ type MongoResponse struct {
 	Latest     bool   `json:"is_latest" bson:"latest"`
 
 	Specification bson.Raw `json:"-" bson:"api"`
-	NameAlt string `json:"-" bson:"api_title"`
-	ApiVersionAlt string `json:"-" bson:"api_version"`
+	NameAlt       string   `json:"-" bson:"api_title"`
+	ApiVersionAlt string   `json:"-" bson:"api_version"`
 }
 
+// MongoResponseWithApi - structure containing both the mongo document and the embedding created by the backend
 type MongoResponseWithApi struct {
 	MongoResponse MongoResponse `json:"metadata"`
 	Specification string        `json:"specification"`
 }
 
+// InitObject - function to fix the initiated object
 func (b *MongoResponse) InitObject() {
 	oasOpenapi := b.Specification.Lookup("openapi").String()
 	oasSwagger := b.Specification.Lookup("swagger").String()

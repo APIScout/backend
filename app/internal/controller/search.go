@@ -27,12 +27,14 @@ func Search(ctx *gin.Context) {
 
 	if err != nil {
 		NewHTTPError(ctx, http.StatusBadRequest, "The query has not been correctly formatted")
+		return
 	}
 
 	embeddings, err := embedding.PerformPipeline([]string{body.Fragment}, true)
 
 	if err != nil {
 		NewHTTPError(ctx, http.StatusBadRequest, "The query has not been correctly formatted")
+		return
 	}
 
 	log.Print(len(embeddings.Predictions[0]))
