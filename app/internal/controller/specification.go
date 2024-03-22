@@ -1,16 +1,17 @@
 package controller
 
 import (
-	"backend/app/internal/elastic"
-	"backend/app/internal/embedding"
-	"github.com/goccy/go-json"
+	"log"
 	"net/http"
 
+	"backend/app/internal/elastic"
+	"backend/app/internal/embedding"
 	"backend/app/internal/models"
 	"backend/app/internal/mongodb"
 
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/gin-gonic/gin"
+	"github.com/goccy/go-json"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -24,7 +25,7 @@ import (
 //	@Accept			json
 //	@Produce		json
 //	@Param			id	path		string	true	"Specification ID"
-//	@Success		200	{object}	map[string]interface{}
+//	@Success		200	{object}	models.MongoResponseWithApi
 //	@Failure		400	{object}	models.HTTPError
 //	@Failure		500	{object}	models.HTTPError
 //	@Router			/specification/{id} [get]
@@ -41,18 +42,21 @@ func GetSpecificationHandler(mongoClient *mongo.Client) gin.HandlerFunc {
 
 		// Retrieve document based on its id
 		query := bson.M{"_id": objId}
-		specDoc, err := mongodb.SearchDocument(db, query, "specifications")
+		specDoc, err := mongodb.RetrieveDocument(db, query, "specifications")
 
 		if err != nil {
 			NewHTTPError(ctx, http.StatusNotFound, "The document with the given ID has not been found")
 			return
 		}
 
-		// Unmarshal raw bson into json document
-		var jsonMap map[string]interface{}
-		err = json.Unmarshal([]byte(specDoc.String()), &jsonMap)
+		// Unmarshal raw bson into MongoResponse object
+		var jsonMap models.MongoResponseWithApi
+		err = bson.Unmarshal(specDoc, &jsonMap.MongoResponse)
+		jsonMap.MongoResponse.InitObject()
+		jsonMap.Specification = specDoc.Lookup("api").String()
 
 		if err != nil {
+			log.Print(err)
 			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
 			return
 		}
@@ -71,10 +75,10 @@ func GetSpecificationHandler(mongoClient *mongo.Client) gin.HandlerFunc {
 //	@Tags			specification
 //	@Accept			json
 //	@Produce		json
-//	@Param			specifications	body		models.SpecificationsRequest	true	"New Specifications"
-//	@Success		200				{object}	map[string]interface{}
-//	@Failure		400				{object}	models.HTTPError
-//	@Failure		500				{object}	models.HTTPError
+//	@Param			specifications	body	models.SpecificationsRequest	true	"New Specifications"
+//	@Success		200
+//	@Failure		400	{object}	models.HTTPError
+//	@Failure		500	{object}	models.HTTPError
 //	@Router			/specification [post]
 func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Client) gin.HandlerFunc {
 	fn := func(ctx *gin.Context) {
@@ -126,11 +130,25 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 		}
 
 		for index, embeddingVal := range embeddings.Predictions {
+			jsonSpecification, err := json.Marshal(specificationJSONs[index])
+
+			if err != nil {
+				NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+				return
+			}
+
 			var request models.EsRequest
-			request.MongoId = documentIDs.InsertedIDs[index].(primitive.ObjectID).Hex()
+			err = json.Unmarshal(jsonSpecification, &request.MongoDocument)
+
+			if err != nil {
+				NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+				return
+			}
+
+			request.MongoDocument.MongoId = documentIDs.InsertedIDs[index].(primitive.ObjectID).Hex()
 			request.Embedding = embeddingVal
 
-			err := elastic.InsertDocument(elasticClient, request, "test")
+			err = elastic.InsertDocument(elasticClient, request, "test")
 
 			if err != nil {
 				NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
@@ -138,7 +156,6 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 			}
 		}
 	}
-
 
 	return fn
 }

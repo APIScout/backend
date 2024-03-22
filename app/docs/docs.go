@@ -81,11 +81,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
+                        "description": "OK"
                     },
                     "400": {
                         "description": "Bad Request",
@@ -128,8 +124,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/models.MongoResponseWithApi"
                         }
                     },
                     "400": {
@@ -167,6 +162,43 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "Bad Request"
+                }
+            }
+        },
+        "models.MongoResponse": {
+            "type": "object",
+            "properties": {
+                "api_id": {
+                    "type": "integer"
+                },
+                "api_version": {
+                    "type": "string"
+                },
+                "commits_n": {
+                    "type": "integer"
+                },
+                "is_latest": {
+                    "type": "boolean"
+                },
+                "mongo_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "oas_version": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.MongoResponseWithApi": {
+            "type": "object",
+            "properties": {
+                "metadata": {
+                    "$ref": "#/definitions/models.MongoResponse"
+                },
+                "specification": {
+                    "type": "string"
                 }
             }
         },
