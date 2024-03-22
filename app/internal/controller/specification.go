@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"log"
 	"net/http"
 
 	"backend/app/internal/elastic"
@@ -56,7 +55,6 @@ func GetSpecificationHandler(mongoClient *mongo.Client) gin.HandlerFunc {
 		jsonMap.Specification = specDoc.Lookup("api").String()
 
 		if err != nil {
-			log.Print(err)
 			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
 			return
 		}
