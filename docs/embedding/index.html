@@ -22,22 +22,25 @@
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;backend/app/internal/embedding&#34;</span></pre>
 <h3 id="pkg-index" data-pagefind-ignore>Index</h3>
 <ul data-pagefind-ignore>
+  <li><a href="#Embed">func Embed(fragments []string) (*models.EmbeddingResponse, error)</a></li>
   <li><a href="#ExtractTags">func ExtractTags(fragments []string) []string</a></li>
+  <li><a href="#PerformPipeline">func PerformPipeline(fragments []string, isQuery bool) (*models.EmbeddingResponse, error)</a></li>
   <li><a href="#PreprocessFragment">func PreprocessFragment(fragments []string, isQuery bool) []string</a></li>
   <li><a href="#Stemming">func Stemming(fragments []string) []string</a></li>
   <li><a href="#StopWordRemoval">func StopWordRemoval(fragments []string) []string</a></li>
-  <li>
-      <a href="#Embeddings">type Embeddings</a>
-      <ul>
-          <li><a href="#Embed">func Embed(fragments []string) *Embeddings</a></li>
-          <li><a href="#PerformPipeline">func PerformPipeline(fragments []string, isQuery bool) *Embeddings</a></li>
-          </ul>
-      </li>
   </ul><h3 id="pkg-functions" data-pagefind-ignore>Functions</h3>
-  <h3 id="ExtractTags">func ExtractTags</h3>
+  <h3 id="Embed">func Embed</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">Embed</span><span class="p">(</span><span class="nx">fragments</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="../models"><span class="nx">models</span></a><span class="p">.</span><a href="../models#EmbeddingResponse"><span class="nx">EmbeddingResponse</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+    <p>Embed use the Universal Sentence Encoder model to transform the array of fragments (string) into an array of
+embeddings (512-dimension float32 embedding). A list of embeddings needs to be passed to the function.
+<h3 id="ExtractTags">func ExtractTags</h3>
     <pre class="chroma"><span class="kd">func</span> <span class="nf">ExtractTags</span><span class="p">(</span><span class="nx">fragments</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
     <p>ExtractTags - extract the NL tags from a fragment (JSON document documenting a REST API), and return an array of
 strings, one for each fragment. An array of fragments needs to be passed to the function.
+<h3 id="PerformPipeline">func PerformPipeline</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">PerformPipeline</span><span class="p">(</span><span class="nx">fragments</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <span class="nx">isQuery</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="../models"><span class="nx">models</span></a><span class="p">.</span><a href="../models#EmbeddingResponse"><span class="nx">EmbeddingResponse</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+    <p>PerformPipeline - fragments are preprocessed and embeddings are generated and returned. An array of fragments
+(string) and a boolean indicating if the fragments are queries or not need to be passed to the function.
 <h3 id="PreprocessFragment">func PreprocessFragment</h3>
     <pre class="chroma"><span class="kd">func</span> <span class="nf">PreprocessFragment</span><span class="p">(</span><span class="nx">fragments</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <span class="nx">isQuery</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
     <p>PreprocessFragment - fragments are preprocessed by running a standard NLP pipeline, composed of string cleaning,
@@ -51,17 +54,6 @@ function.
     <pre class="chroma"><span class="kd">func</span> <span class="nf">StopWordRemoval</span><span class="p">(</span><span class="nx">fragments</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
     <p>StopWordRemoval - remove all stopwords from the given strings. An array of strings needs to be passed to the
 function.
-<h3 id="pkg-types" data-pagefind-ignore>Types</h3>
-  <h3 id="Embeddings">type Embeddings</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">Embeddings</span> <span class="p">=</span> <a href="../models"><span class="nx">models</span></a><span class="p">.</span><a href="../models#EmbeddingResponse"><span class="nx">EmbeddingResponse</span></a></pre>
-    <h4 id="Embed">func Embed</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="nf">Embed</span><span class="p">(</span><span class="nx">fragments</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="o">*</span><a href="#Embeddings"><span class="nx">Embeddings</span></a></pre>
-  <p>Embed use the Universal Sentence Encoder model to transform the array of fragments (string) into an array of
-embeddings (512-dimension float32 embedding). A list of embeddings needs to be passed to the function.
-<h4 id="PerformPipeline">func PerformPipeline</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="nf">PerformPipeline</span><span class="p">(</span><span class="nx">fragments</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <span class="nx">isQuery</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span> <span class="o">*</span><a href="#Embeddings"><span class="nx">Embeddings</span></a></pre>
-  <p>PerformPipeline - fragments are preprocessed and embeddings are generated and returned. An array of fragments
-(string) and a boolean indicating if the fragments are queries or not need to be passed to the function.
 </main>
     <hr>
     <footer>
