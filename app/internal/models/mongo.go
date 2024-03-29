@@ -1,36 +1,59 @@
 package models
 
 import (
-	"go.mongodb.org/mongo-driver/bson"
 	"regexp"
+	"strconv"
 	"strings"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 // MongoResponse - structure of the Mongo document sent by the db
 type MongoResponse struct {
-	MongoId    string  `json:"mongo-id" bson:"_id"`
-	Name       string  `json:"name" bson:"_name"`
-	ApiId      int     `json:"api-id" bson:"api_spec_id"`
-	ApiVersion Version `json:"api-version"`
-	OASVersion Version `json:"oas-version"`
-	Commits    int     `json:"commits" bson:"commits"`
-	Latest     bool    `json:"latest" bson:"latest"`
-	Source     string  `json:"source"`
+	MongoId    string `bson:"_id"`
+	Id         int    `bson:"api_spec_id"`
+	Name       string `bson:"_name"`
+	Commits    int    `bson:"commits"`
+	Latest     bool   `bson:"latest"`
+	OASType    string
+	Source     string
+	ApiVersion Version
+	OASVersion Version
 
-	Specification  bson.Raw `json:"-" bson:"api"`
-	NameAlt        string   `json:"-" bson:"api_title"`
-	ApiVersionAlt1 string   `json:"-" bson:"_version"`
-	ApiVersionAlt2 string   `json:"-" bson:"api_version"`
-	SourceAlt1 string `json:"-" bson:"_api_url"`
-	SourceAlt2 string `json:"-" bson:"url"`
+	specificationJson bson.Raw `bson:"api"`
+	nameAlt           string   `bson:"api_title"`
+	apiVersionAlt1    string   `bson:"_version"`
+	apiVersionAlt2    string   `bson:"api_version"`
+	sourceAlt1        string   `bson:"_api_url"`
+	sourceAlt2        string   `bson:"url"`
+}
+
+type MongoDocument struct {
+	MongoId       string        `json:"mongo-id"`
+	Api           Api           `json:"api"`
+	Specification Specification `json:"specification"`
+}
+
+type Api struct {
+	Id      int     `json:"id"`
+	Name    string  `json:"name"`
+	Version Version `json:"version"`
+	Commits int     `json:"commits"`
+	Latest  bool    `json:"latest"`
+	Source  string  `json:"source"`
+}
+
+type Specification struct {
+	Version Version `json:"version"`
+	Type    string  `json:"type"`
 }
 
 type Version struct {
 	Raw        string `json:"raw"`
 	Valid      bool   `json:"valid"`
-	Major      string `json:"major"`
-	Minor      string `json:"minor"`
-	Patch      string `json:"patch"`
+	Major      int    `json:"major"`
+	Minor      int    `json:"minor"`
+	Patch      int    `json:"patch"`
 	Prerelease string `json:"prerelease"`
 	Build      string `json:"build"`
 }
@@ -42,29 +65,47 @@ type MongoResponseWithApi struct {
 }
 
 // InitObject - function to fix the initiated object
-func (b *MongoResponse) InitObject() {
+func (b *MongoResponse) InitObject() MongoDocument {
 	GetOasVersion(b)
 
-	if strings.Compare(b.NameAlt, "") != 0 {
-		b.Name = b.NameAlt
-		b.ApiVersion = GetSemanticVersion(b.ApiVersionAlt2)
-		b.Source = GetSource(b.SourceAlt2)
+	if strings.Compare(b.nameAlt, "") != 0 {
+		b.Name = b.nameAlt
+		b.ApiVersion = GetSemanticVersion(b.apiVersionAlt2)
+		b.Source = GetSource(b.sourceAlt2)
 	} else {
-		b.ApiVersion = GetSemanticVersion(b.ApiVersionAlt1)
-		b.Source = GetSource(b.SourceAlt1)
+		b.ApiVersion = GetSemanticVersion(b.apiVersionAlt1)
+		b.Source = GetSource(b.sourceAlt1)
+	}
+
+	return MongoDocument{
+		MongoId: b.MongoId,
+		Api: Api{
+			Id:      b.Id,
+			Name:    b.Name,
+			Version: b.ApiVersion,
+			Commits: b.Commits,
+			Latest:  b.Latest,
+			Source:  b.Source,
+		},
+		Specification: Specification{
+			Version: b.OASVersion,
+			Type:    b.OASType,
+		},
 	}
 }
 
 func GetOasVersion(specification *MongoResponse) {
-	oasOpenapi := specification.Specification.Lookup("openapi").String()
-	oasSwagger := specification.Specification.Lookup("swagger").String()
+	oasOpenapi := specification.specificationJson.Lookup("openapi").String()
+	oasSwagger := specification.specificationJson.Lookup("swagger").String()
 	oasOpenapi = strings.Trim(oasOpenapi, `\\"`)
 	oasSwagger = strings.Trim(oasSwagger, `\\"`)
 
 	if strings.Compare(oasOpenapi, "") != 0 {
 		specification.OASVersion = GetSemanticVersion(oasOpenapi)
+		specification.OASType = "openapi"
 	} else {
 		specification.OASVersion = GetSemanticVersion(oasSwagger)
+		specification.OASType = "swagger"
 	}
 }
 
@@ -81,10 +122,14 @@ func GetSemanticVersion(version string) Version {
 	matches := regex.FindStringSubmatch(version)
 
 	if matches != nil {
+		major, _ := strconv.ParseInt(matches[major], 10, 32)
+		minor, _ := strconv.ParseInt(matches[minor], 10, 32)
+		patch, _ := strconv.ParseInt(matches[patch], 10, 32)
+
 		semanticVersion.Valid = true
-		semanticVersion.Major = matches[major]
-		semanticVersion.Minor = matches[minor]
-		semanticVersion.Patch = matches[patch]
+		semanticVersion.Major = int(major)
+		semanticVersion.Minor = int(minor)
+		semanticVersion.Patch = int(patch)
 		semanticVersion.Prerelease = matches[prerelease]
 		semanticVersion.Build = matches[build]
 	}
@@ -94,9 +139,9 @@ func GetSemanticVersion(version string) Version {
 
 func GetSource(url string) string {
 	if strings.Contains(url, "github") {
-		return "GitHub"
+		return "github"
 	} else if strings.Contains(url, "swagger") {
-		return "SwaggerHub"
+		return "swaggerhub"
 	}
 
 	return ""

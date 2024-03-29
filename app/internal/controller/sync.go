@@ -30,7 +30,7 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 		total := 1422195
 
 		for documents.Next(context.TODO()) {
-			log.Printf("Saving document %d/%d - [%d%%]", current, total, current / total)
+			log.Printf("Saving document %d/%d - [%d%%]", current, total, current/total)
 
 			var document models.MongoResponse
 			specification := documents.Current.Lookup("api")
@@ -43,8 +43,8 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 
 			log.Printf("Mongo ID: %s", document.MongoId)
 
-			document.InitObject()
-			query := fmt.Sprintf(`{"query": {"match": {"metadata.mongo_id": "%s"}}}`, document.MongoId)
+			mongoDocument := document.InitObject()
+			query := fmt.Sprintf(`{"query": {"match": {"metadata.mongo_id": "%s"}}}`, mongoDocument.MongoId)
 			res, err := elastic.SearchDocument(elasticClient, query, "apis")
 
 			if len(res.Hits.Hits) == 0 {
@@ -58,7 +58,7 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 
 				if len(embeddings.Predictions) != 0 {
 					var esDocument models.EsRequest
-					esDocument.MongoDocument = document
+					esDocument.MongoDocument = mongoDocument
 					esDocument.Embedding = embeddings.Predictions[0]
 
 					err = elastic.InsertDocument(elasticClient, esDocument, "apis")
