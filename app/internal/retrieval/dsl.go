@@ -16,7 +16,7 @@ func ParseDSLRequest(dslString string) (*string, error) {
 		return nil, err
 	}
 
-	return CreateEsFilter(filters), err
+	return CreateEsFilter(filters), nil
 }
 
 func CreateEsFilter(filters []models.Filter) *string {

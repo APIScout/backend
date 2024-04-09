@@ -107,14 +107,14 @@ func (filter *Filter) ToEsFilter() (string, bool) {
 		esFilter.WriteString(`"term": {"metadata.` + filter.Lhs + `": "` + filter.Rhs + `"}`)
 	case "regexp":
 		esFilter.WriteString(`"regexp": {"metadata.` + filter.Lhs + `": ".*` + filter.Rhs + `.*"}`)
-	case "gte":
-		esFilter.WriteString(`"range": {"metadata.` + filter.Lhs + `": {"gte": ` + filter.Rhs + `}}`)
-	case "lte":
-		esFilter.WriteString(`"range": {"metadata.` + filter.Lhs + `": {"lte": ` + filter.Rhs + `}}`)
-	case "gt":
-		esFilter.WriteString(`"range": {"metadata.` + filter.Lhs + `": {"gt": ` + filter.Rhs + `}}`)
-	case "lt":
-		esFilter.WriteString(`"range": {"metadata.` + filter.Lhs + `": {"lt": ` + filter.Rhs + `}}`)
+	case "gte", "lte", "gt", "lt":
+		rhs := filter.Rhs
+
+		if TypesMap[filter.Lhs] == "version" {
+			rhs = `"` + rhs + `"`
+		}
+
+		esFilter.WriteString(`"range": {"metadata.` + filter.Lhs + `": {"` + esOperator + `": ` + rhs + `}}`)
 	}
 
 	return esFilter.String(), positive
