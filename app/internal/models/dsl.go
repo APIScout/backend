@@ -1,12 +1,14 @@
 package models
 
 import (
+	"errors"
 	"slices"
 	"strconv"
 	"strings"
 )
 
 var Operators = []string{"==", "!=", "~=", "<>", ">=", "<=", ">", "<"}
+var NegOperators = []string{"!="}
 
 var OperatorsMap = map[string][]string{
 	"==": {"bool", "str", "int", "version"},
@@ -40,6 +42,16 @@ var TypesMap = map[string]string{
 	"specification.type":               "str",
 }
 
+var OperatorToEsMap = map[string]string{
+	"==": "term",
+	"!=": "term",
+	"~=": "regexp",
+	">=": "gte",
+	"<=": "lte",
+	">":  "gt",
+	"<":  "lt",
+}
+
 var BracketsMap = map[string]string{
 	"[": ">=",
 	"(": ">",
@@ -48,35 +60,62 @@ var BracketsMap = map[string]string{
 }
 
 type Filter struct {
-	Valid    bool
 	Lhs      string
 	Operator string
 	Rhs      string
 }
 
-func (filter *Filter) Validate() {
+func (filter *Filter) Validate() error {
 	acceptedType := TypesMap[filter.Lhs]
 	operatorTypes := OperatorsMap[filter.Operator]
 
 	if slices.Contains(operatorTypes, acceptedType) {
 		switch acceptedType {
 		case "str":
-			if strings.Compare(filter.Rhs, "") != 0 {
+			if strings.Compare(string(filter.Rhs[0]), `"`) == 0 &&
+				strings.Compare(string(filter.Rhs[len(filter.Rhs)-1]), `"`) == 0 &&
+				strings.Compare(filter.Rhs, "") != 0 {
+
 				filter.Rhs = strings.Trim(filter.Rhs, `"`)
-				filter.Valid = true
+				return nil
 			}
 		case "version":
-			if GetSemanticVersion(filter.Rhs).Valid {
-				filter.Valid = true
+			if filter.Operator == "~=" || GetSemanticVersion(filter.Rhs).Valid {
+				return nil
 			}
 		case "bool":
 			if strings.Compare(filter.Rhs, "true") == 0 || strings.Compare(filter.Rhs, "false") == 0 {
-				filter.Valid = true
+				return nil
 			}
 		case "int":
 			if _, err := strconv.ParseInt(filter.Rhs, 10, 64); err == nil {
-				filter.Valid = true
+				return nil
 			}
 		}
 	}
+
+	return errors.New("the type of the right hand side does not match the ones of the operator")
+}
+
+func (filter *Filter) ToEsFilter() (string, bool) {
+	var esFilter strings.Builder
+	esOperator := OperatorToEsMap[filter.Operator]
+	positive := !slices.Contains(NegOperators, filter.Operator)
+
+	switch esOperator {
+	case "term":
+		esFilter.WriteString(`"term": {"metadata.` + filter.Lhs + `": "` + filter.Rhs + `"}`)
+	case "regexp":
+		esFilter.WriteString(`"regexp": {"metadata.` + filter.Lhs + `": ".*` + filter.Rhs + `.*"}`)
+	case "gte":
+		esFilter.WriteString(`"range": {"metadata.` + filter.Lhs + `": {"gte": ` + filter.Rhs + `}}`)
+	case "lte":
+		esFilter.WriteString(`"range": {"metadata.` + filter.Lhs + `": {"lte": ` + filter.Rhs + `}}`)
+	case "gt":
+		esFilter.WriteString(`"range": {"metadata.` + filter.Lhs + `": {"gt": ` + filter.Rhs + `}}`)
+	case "lt":
+		esFilter.WriteString(`"range": {"metadata.` + filter.Lhs + `": {"lt": ` + filter.Rhs + `}}`)
+	}
+
+	return esFilter.String(), positive
 }

@@ -38,6 +38,8 @@ func Search(ctx *gin.Context) {
 		return
 	}
 
+
+
 	log.Print(body)
 	log.Print(len(embeddings.Predictions[0]))
 }

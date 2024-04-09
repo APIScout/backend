@@ -20,12 +20,12 @@ type MongoResponse struct {
 	ApiVersion Version
 	OASVersion Version
 
-	specificationJson bson.Raw `bson:"api"`
-	nameAlt           string   `bson:"api_title"`
-	apiVersionAlt1    string   `bson:"_version"`
-	apiVersionAlt2    string   `bson:"api_version"`
-	sourceAlt1        string   `bson:"_api_url"`
-	sourceAlt2        string   `bson:"url"`
+	SpecificationJson bson.Raw `bson:"api"`
+	NameAlt           string   `bson:"api_title"`
+	ApiVersionAlt1    string   `bson:"_version"`
+	ApiVersionAlt2    string   `bson:"api_version"`
+	SourceAlt1        string   `bson:"_api_url"`
+	SourceAlt2        string   `bson:"url"`
 }
 
 type MongoDocument struct {
@@ -68,13 +68,13 @@ type MongoResponseWithApi struct {
 func (b *MongoResponse) InitObject() MongoDocument {
 	GetOasVersion(b)
 
-	if strings.Compare(b.nameAlt, "") != 0 {
-		b.Name = b.nameAlt
-		b.ApiVersion = GetSemanticVersion(b.apiVersionAlt2)
-		b.Source = GetSource(b.sourceAlt2)
+	if strings.Compare(b.NameAlt, "") != 0 {
+		b.Name = b.NameAlt
+		b.ApiVersion = GetSemanticVersion(b.ApiVersionAlt2)
+		b.Source = GetSource(b.SourceAlt2)
 	} else {
-		b.ApiVersion = GetSemanticVersion(b.apiVersionAlt1)
-		b.Source = GetSource(b.sourceAlt1)
+		b.ApiVersion = GetSemanticVersion(b.ApiVersionAlt1)
+		b.Source = GetSource(b.SourceAlt1)
 	}
 
 	return MongoDocument{
@@ -95,8 +95,8 @@ func (b *MongoResponse) InitObject() MongoDocument {
 }
 
 func GetOasVersion(specification *MongoResponse) {
-	oasOpenapi := specification.specificationJson.Lookup("openapi").String()
-	oasSwagger := specification.specificationJson.Lookup("swagger").String()
+	oasOpenapi := specification.SpecificationJson.Lookup("openapi").String()
+	oasSwagger := specification.SpecificationJson.Lookup("swagger").String()
 	oasOpenapi = strings.Trim(oasOpenapi, `\\"`)
 	oasSwagger = strings.Trim(oasSwagger, `\\"`)
 

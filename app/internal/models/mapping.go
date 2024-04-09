@@ -27,7 +27,7 @@ var mapping = `{
                   "build": { "type": "text" }
                 }
               }
-
+			}
           },
           "specification": {
             "type": "nested",

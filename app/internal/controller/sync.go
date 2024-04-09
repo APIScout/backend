@@ -44,8 +44,15 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 			log.Printf("Mongo ID: %s", document.MongoId)
 
 			mongoDocument := document.InitObject()
-			query := fmt.Sprintf(`{"query": {"match": {"metadata.mongo_id": "%s"}}}`, mongoDocument.MongoId)
+			query := fmt.Sprintf(
+				`{"query": {"nested": {"path": "metadata", "query": {"match": {"metadata.mongo-id": "%s"}}}}}`,
+				mongoDocument.MongoId)
 			res, err := elastic.SearchDocument(elasticClient, query, "apis")
+
+			if err != nil {
+				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
+				return
+			}
 
 			if len(res.Hits.Hits) == 0 {
 				var embeddings *models.EmbeddingResponse
