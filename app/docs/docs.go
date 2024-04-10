@@ -147,6 +147,9 @@ const docTemplate = `{
         "models.EmbeddingRequest": {
             "type": "object",
             "properties": {
+                "filters": {
+                    "type": "string"
+                },
                 "fragment": {
                     "type": "string"
                 }
@@ -168,25 +171,46 @@ const docTemplate = `{
         "models.MongoResponse": {
             "type": "object",
             "properties": {
-                "api_id": {
-                    "type": "integer"
+                "apiVersion": {
+                    "$ref": "#/definitions/models.Version"
                 },
-                "api_version": {
+                "apiVersionAlt1": {
                     "type": "string"
                 },
-                "commits_n": {
+                "apiVersionAlt2": {
+                    "type": "string"
+                },
+                "commits": {
                     "type": "integer"
                 },
-                "is_latest": {
+                "id": {
+                    "type": "integer"
+                },
+                "latest": {
                     "type": "boolean"
                 },
-                "mongo_id": {
+                "mongoId": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
-                "oas_version": {
+                "nameAlt": {
+                    "type": "string"
+                },
+                "oastype": {
+                    "type": "string"
+                },
+                "oasversion": {
+                    "$ref": "#/definitions/models.Version"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "sourceAlt1": {
+                    "type": "string"
+                },
+                "sourceAlt2": {
                     "type": "string"
                 }
             }
@@ -202,7 +226,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Specification": {
+        "models.SpecificationBackend": {
             "type": "object",
             "additionalProperties": true
         },
@@ -212,8 +236,34 @@ const docTemplate = `{
                 "specifications": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Specification"
+                        "$ref": "#/definitions/models.SpecificationBackend"
                     }
+                }
+            }
+        },
+        "models.Version": {
+            "type": "object",
+            "properties": {
+                "build": {
+                    "type": "string"
+                },
+                "major": {
+                    "type": "integer"
+                },
+                "minor": {
+                    "type": "integer"
+                },
+                "patch": {
+                    "type": "integer"
+                },
+                "prerelease": {
+                    "type": "string"
+                },
+                "raw": {
+                    "type": "string"
+                },
+                "valid": {
+                    "type": "boolean"
                 }
             }
         }

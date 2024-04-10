@@ -2,6 +2,8 @@ basePath: /api/v1
 definitions:
   models.EmbeddingRequest:
     properties:
+      filters:
+        type: string
       fragment:
         type: string
     type: object
@@ -16,19 +18,33 @@ definitions:
     type: object
   models.MongoResponse:
     properties:
-      api_id:
-        type: integer
-      api_version:
+      apiVersion:
+        $ref: '#/definitions/models.Version'
+      apiVersionAlt1:
         type: string
-      commits_n:
+      apiVersionAlt2:
+        type: string
+      commits:
         type: integer
-      is_latest:
+      id:
+        type: integer
+      latest:
         type: boolean
-      mongo_id:
+      mongoId:
         type: string
       name:
         type: string
-      oas_version:
+      nameAlt:
+        type: string
+      oastype:
+        type: string
+      oasversion:
+        $ref: '#/definitions/models.Version'
+      source:
+        type: string
+      sourceAlt1:
+        type: string
+      sourceAlt2:
         type: string
     type: object
   models.MongoResponseWithApi:
@@ -38,15 +54,32 @@ definitions:
       specification:
         type: string
     type: object
-  models.Specification:
+  models.SpecificationBackend:
     additionalProperties: true
     type: object
   models.SpecificationsRequest:
     properties:
       specifications:
         items:
-          $ref: '#/definitions/models.Specification'
+          $ref: '#/definitions/models.SpecificationBackend'
         type: array
+    type: object
+  models.Version:
+    properties:
+      build:
+        type: string
+      major:
+        type: integer
+      minor:
+        type: integer
+      patch:
+        type: integer
+      prerelease:
+        type: string
+      raw:
+        type: string
+      valid:
+        type: boolean
     type: object
 info:
   contact: {}

@@ -20,7 +20,7 @@ type MongoResponse struct {
 	ApiVersion Version
 	OASVersion Version
 
-	SpecificationJson bson.Raw `bson:"api"`
+	SpecificationJson bson.Raw `json:"-" bson:"api"`
 	NameAlt           string   `bson:"api_title"`
 	ApiVersionAlt1    string   `bson:"_version"`
 	ApiVersionAlt2    string   `bson:"api_version"`
