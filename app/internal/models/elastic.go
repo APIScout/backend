@@ -2,7 +2,7 @@ package models
 
 // EsRequest - structure of an elasticsearch document to be sent to the elasticsearch client.
 type EsRequest struct {
-	MongoDocument MongoResponse `json:"metadata"`
+	MongoDocument MongoDocument `json:"metadata"`
 	Embedding     []float32     `json:"embedding"`
 }
 

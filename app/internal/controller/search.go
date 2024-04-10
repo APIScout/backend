@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"backend/app/internal/retrieval"
 	"log"
 	"net/http"
 
@@ -11,16 +12,17 @@ import (
 )
 
 // Search godoc
-//	@Summary		Search OpenAPI specifications
-//	@Description	Retrieve OpenAPI specifications matching the given query
-//	@Tags			search
-//	@Accept			json
-//	@Produce		json
-//	@Param			fragment	body		models.EmbeddingRequest	true	"Search query"
-//  TODO: Change this
-//	@Success		200			{string}	OK
-//	@Failure		400			{object}	models.HTTPError
-//	@Router			/search [post]
+//
+//		@Summary		Search OpenAPI specifications
+//		@Description	Retrieve OpenAPI specifications matching the given query
+//		@Tags			search
+//		@Accept			json
+//		@Produce		json
+//		@Param			fragment	body		models.EmbeddingRequest	true	"Search query"
+//	 TODO: Change this
+//		@Success		200			{string}	OK
+//		@Failure		400			{object}	models.HTTPError
+//		@Router			/search [post]
 func Search(ctx *gin.Context) {
 	var body models.EmbeddingRequest
 	err := ctx.BindJSON(&body)
@@ -37,5 +39,13 @@ func Search(ctx *gin.Context) {
 		return
 	}
 
-	log.Print(len(embeddings.Predictions[0]))
+	filters, err := retrieval.ParseDSLRequest(body.DSL)
+
+	if err != nil {
+		NewHTTPError(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	log.Print(embeddings)
+	log.Print(*filters)
 }
