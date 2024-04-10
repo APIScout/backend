@@ -28,6 +28,7 @@ var TypesMap = map[string]string{
 	"api.version.patch":      "int",
 	"api.version.prerelease": "str",
 	"api.version.build":      "str",
+	"api.name":               "str",
 	"api.commits":            "int",
 	"api.latest":             "bool",
 	"api.source":             "str",

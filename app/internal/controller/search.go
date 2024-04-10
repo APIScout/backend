@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"backend/app/internal/retrieval"
 	"log"
 	"net/http"
 
@@ -38,8 +39,13 @@ func Search(ctx *gin.Context) {
 		return
 	}
 
+	filters, err := retrieval.ParseDSLRequest(body.DSL)
 
+	if err != nil {
+		NewHTTPError(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
 
-	log.Print(body)
-	log.Print(len(embeddings.Predictions[0]))
+	log.Print(embeddings)
+	log.Print(*filters)
 }

@@ -23,7 +23,7 @@ func CreateEsFilter(filters []models.Filter) *string {
 	var must strings.Builder
 	var mustNot strings.Builder
 	var esFilter strings.Builder
-	esFilter.WriteString(`"filter": {"bool": {`)
+	esFilter.WriteString(`"bool": {`)
 
 	for index, filter := range filters {
 		pathArray := strings.Split(filter.Lhs, ".")
@@ -45,7 +45,7 @@ func CreateEsFilter(filters []models.Filter) *string {
 
 	esFilter.WriteString(`"must": [` + must.String() + `], `)
 	esFilter.WriteString(`"must_not": [` + mustNot.String() + `]`)
-	esFilter.WriteString("}}")
+	esFilter.WriteString("}")
 	res := esFilter.String()
 
 	log.Print(res)
