@@ -17,7 +17,7 @@ func SetupRoutes(router *gin.Engine, config *models.Config) {
 	// Create routes
 	v1 := router.Group("/api/v1")
 	{
-		v1.POST("/search", Search)
+		v1.POST("/search", SearchHandler(mongoClient, elasticClient))
 		spec := v1.Group("/specification")
 		{
 			spec.POST("/", PostSpecificationHandler(mongoClient, elasticClient))

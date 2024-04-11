@@ -2,7 +2,6 @@ package retrieval
 
 import (
 	"errors"
-	"log"
 	"slices"
 	"strings"
 
@@ -47,8 +46,6 @@ func CreateEsFilter(filters []models.Filter) *string {
 	esFilter.WriteString(`"must_not": [` + mustNot.String() + `]`)
 	esFilter.WriteString("}")
 	res := esFilter.String()
-
-	log.Print(res)
 
 	return &res
 }

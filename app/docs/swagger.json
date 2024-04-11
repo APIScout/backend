@@ -23,7 +23,33 @@
                 "summary": "Search OpenAPI specifications",
                 "parameters": [
                     {
-                        "description": "Search query",
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "size of the page",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 100,
+                        "description": "knn's k",
+                        "name": "k",
+                        "in": "query"
+                    },
+                    {
+                        "description": "search query",
                         "name": "fragment",
                         "in": "body",
                         "required": true,
@@ -36,7 +62,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.SpecificationWithApi"
+                            }
                         }
                     },
                     "400": {
@@ -117,7 +146,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.MongoResponseWithApi"
+                            "$ref": "#/definitions/models.SpecificationWithApi"
                         }
                     },
                     "400": {
@@ -137,6 +166,29 @@
         }
     },
     "definitions": {
+        "models.Api": {
+            "type": "object",
+            "properties": {
+                "commits": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "latest": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "version": {
+                    "$ref": "#/definitions/models.Version"
+                }
+            }
+        },
         "models.EmbeddingRequest": {
             "type": "object",
             "properties": {
@@ -161,67 +213,45 @@
                 }
             }
         },
-        "models.MongoResponse": {
+        "models.MongoDocument": {
             "type": "object",
             "properties": {
-                "apiVersion": {
-                    "$ref": "#/definitions/models.Version"
+                "api": {
+                    "$ref": "#/definitions/models.Api"
                 },
-                "apiVersionAlt1": {
+                "mongo-id": {
                     "type": "string"
                 },
-                "apiVersionAlt2": {
-                    "type": "string"
-                },
-                "commits": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "latest": {
-                    "type": "boolean"
-                },
-                "mongoId": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "nameAlt": {
-                    "type": "string"
-                },
-                "oastype": {
-                    "type": "string"
-                },
-                "oasversion": {
-                    "$ref": "#/definitions/models.Version"
-                },
-                "source": {
-                    "type": "string"
-                },
-                "sourceAlt1": {
-                    "type": "string"
-                },
-                "sourceAlt2": {
-                    "type": "string"
+                "specification": {
+                    "$ref": "#/definitions/models.Specification"
                 }
             }
         },
-        "models.MongoResponseWithApi": {
+        "models.Specification": {
             "type": "object",
             "properties": {
-                "metadata": {
-                    "$ref": "#/definitions/models.MongoResponse"
-                },
-                "specification": {
+                "type": {
                     "type": "string"
+                },
+                "version": {
+                    "$ref": "#/definitions/models.Version"
                 }
             }
         },
         "models.SpecificationBackend": {
             "type": "object",
             "additionalProperties": true
+        },
+        "models.SpecificationWithApi": {
+            "type": "object",
+            "properties": {
+                "metadata": {
+                    "$ref": "#/definitions/models.MongoDocument"
+                },
+                "specification": {
+                    "type": "string"
+                }
+            }
         },
         "models.SpecificationsRequest": {
             "type": "object",

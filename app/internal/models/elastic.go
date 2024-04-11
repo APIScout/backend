@@ -18,7 +18,9 @@ type Hit struct {
 	Id       string `json:"_id"`
 	Index    string `json:"_index"`
 	Document struct {
-		MongoId   string    `json:"mongo_id"`
+		Metadata struct {
+			MongoId string `json:"mongo-id"`
+		} `json:"metadata"`
 		Embedding []float32 `json:"embedding"`
 	} `json:"_source"`
 }

@@ -24,7 +24,7 @@ import (
 //	@Accept			json
 //	@Produce		json
 //	@Param			id	path		string	true	"Specification ID"
-//	@Success		200	{object}	models.MongoResponseWithApi
+//	@Success		200	{object}	models.SpecificationWithApi
 //	@Failure		400	{object}	models.HTTPError
 //	@Failure		500	{object}	models.HTTPError
 //	@Router			/specification/{id} [get]
@@ -49,10 +49,11 @@ func GetSpecificationHandler(mongoClient *mongo.Client) gin.HandlerFunc {
 		}
 
 		// Unmarshal raw bson into MongoResponse object
-		var jsonMap models.MongoResponseWithApi
-		err = bson.Unmarshal(specDoc, &jsonMap.MongoResponse)
-		jsonMap.MongoResponse.InitObject()
-		jsonMap.Specification = specDoc.Lookup("api").String()
+		var specObj models.SpecificationWithApi
+		var jsonMap models.MongoResponse
+		err = bson.Unmarshal(specDoc, &jsonMap)
+		specObj.MongoDocument = jsonMap.InitObject()
+		specObj.Specification = specDoc.Lookup("api").String()
 
 		if err != nil {
 			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
@@ -60,7 +61,7 @@ func GetSpecificationHandler(mongoClient *mongo.Client) gin.HandlerFunc {
 		}
 
 		// Return the JSON representation of the document
-		ctx.JSON(http.StatusOK, jsonMap)
+		ctx.JSON(http.StatusOK, specObj)
 	}
 
 	return fn

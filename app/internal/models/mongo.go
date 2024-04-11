@@ -10,22 +10,22 @@ import (
 
 // MongoResponse - structure of the Mongo document sent by the db
 type MongoResponse struct {
-	MongoId    string `bson:"_id"`
-	Id         int    `bson:"api_spec_id"`
-	Name       string `bson:"_name"`
-	Commits    int    `bson:"commits"`
-	Latest     bool   `bson:"latest"`
-	OASType    string
-	Source     string
-	ApiVersion Version
-	OASVersion Version
+	MongoId    string  `json:"mongo-id" bson:"_id"`
+	Id         int     `json:"api-id" bson:"api_spec_id"`
+	Name       string  `json:"name" bson:"_name"`
+	Commits    int     `json:"n-commits" bson:"commits"`
+	Latest     bool    `json:"latest" bson:"latest"`
+	OASType    string  `json:"-"`
+	Source     string  `json:"-"`
+	ApiVersion Version `json:"api-version"`
+	OASVersion Version `json:"specification-version"`
 
 	SpecificationJson bson.Raw `json:"-" bson:"api"`
-	NameAlt           string   `bson:"api_title"`
-	ApiVersionAlt1    string   `bson:"_version"`
-	ApiVersionAlt2    string   `bson:"api_version"`
-	SourceAlt1        string   `bson:"_api_url"`
-	SourceAlt2        string   `bson:"url"`
+	NameAlt           string   `json:"-" bson:"api_title"`
+	ApiVersionAlt1    string   `json:"-" bson:"_version"`
+	ApiVersionAlt2    string   `json:"-" bson:"api_version"`
+	SourceAlt1        string   `json:"-" bson:"_api_url"`
+	SourceAlt2        string   `json:"-" bson:"url"`
 }
 
 type MongoDocument struct {
@@ -58,9 +58,9 @@ type Version struct {
 	Build      string `json:"build"`
 }
 
-// MongoResponseWithApi - structure containing both the mongo document and the embedding created by the backend
-type MongoResponseWithApi struct {
-	MongoResponse MongoResponse `json:"metadata"`
+// SpecificationWithApi - structure containing both the mongo document and the embedding created by the backend
+type SpecificationWithApi struct {
+	MongoDocument MongoDocument `json:"metadata"`
 	Specification string        `json:"specification"`
 }
 

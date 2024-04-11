@@ -1,5 +1,20 @@
 basePath: /api/v1
 definitions:
+  models.Api:
+    properties:
+      commits:
+        type: integer
+      id:
+        type: integer
+      latest:
+        type: boolean
+      name:
+        type: string
+      source:
+        type: string
+      version:
+        $ref: '#/definitions/models.Version'
+    type: object
   models.EmbeddingRequest:
     properties:
       filters:
@@ -16,46 +31,31 @@ definitions:
         example: Bad Request
         type: string
     type: object
-  models.MongoResponse:
+  models.MongoDocument:
     properties:
-      apiVersion:
-        $ref: '#/definitions/models.Version'
-      apiVersionAlt1:
+      api:
+        $ref: '#/definitions/models.Api'
+      mongo-id:
         type: string
-      apiVersionAlt2:
-        type: string
-      commits:
-        type: integer
-      id:
-        type: integer
-      latest:
-        type: boolean
-      mongoId:
-        type: string
-      name:
-        type: string
-      nameAlt:
-        type: string
-      oastype:
-        type: string
-      oasversion:
-        $ref: '#/definitions/models.Version'
-      source:
-        type: string
-      sourceAlt1:
-        type: string
-      sourceAlt2:
-        type: string
-    type: object
-  models.MongoResponseWithApi:
-    properties:
-      metadata:
-        $ref: '#/definitions/models.MongoResponse'
       specification:
+        $ref: '#/definitions/models.Specification'
+    type: object
+  models.Specification:
+    properties:
+      type:
         type: string
+      version:
+        $ref: '#/definitions/models.Version'
     type: object
   models.SpecificationBackend:
     additionalProperties: true
+    type: object
+  models.SpecificationWithApi:
+    properties:
+      metadata:
+        $ref: '#/definitions/models.MongoDocument'
+      specification:
+        type: string
     type: object
   models.SpecificationsRequest:
     properties:
@@ -93,7 +93,27 @@ paths:
       - application/json
       description: Retrieve OpenAPI specifications matching the given query
       parameters:
-      - description: Search query
+      - default: 1
+        description: page number
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: size of the page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: pageSize
+        type: integer
+      - default: 100
+        description: knn's k
+        in: query
+        maximum: 100
+        minimum: 1
+        name: k
+        type: integer
+      - description: search query
         in: body
         name: fragment
         required: true
@@ -105,7 +125,9 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            items:
+              $ref: '#/definitions/models.SpecificationWithApi'
+            type: array
         "400":
           description: Bad Request
           schema:
@@ -159,7 +181,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.MongoResponseWithApi'
+            $ref: '#/definitions/models.SpecificationWithApi'
         "400":
           description: Bad Request
           schema:
