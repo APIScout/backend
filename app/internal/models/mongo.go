@@ -1,35 +1,42 @@
 package models
 
 import (
+	"go.mongodb.org/mongo-driver/bson"
 	"regexp"
 	"strconv"
 	"strings"
-
-	"go.mongodb.org/mongo-driver/bson"
+	"time"
 )
 
 // MongoResponse - structure of the Mongo document sent by the db
 type MongoResponse struct {
-	MongoId    string  `json:"mongo-id" bson:"_id"`
-	Id         int     `json:"api-id" bson:"api_spec_id"`
-	Name       string  `json:"name" bson:"_name"`
-	Commits    int     `json:"n-commits" bson:"commits"`
-	Latest     bool    `json:"latest" bson:"latest"`
-	OASType    string  `json:"-"`
-	Source     string  `json:"-"`
-	ApiVersion Version `json:"api-version"`
-	OASVersion Version `json:"specification-version"`
+	MongoId    string `bson:"_id"`
+	Id         int    `bson:"api_spec_id"`
+	Name       string `bson:"_name"`
+	Commits    int    `bson:"commits"`
+	Latest     bool   `bson:"latest"`
+	Score      bool
+	OASType    string
+	Source     string
+	Date       time.Time
+	ApiVersion Version
+	OASVersion Version
 
-	SpecificationJson bson.Raw `json:"-" bson:"api"`
-	NameAlt           string   `json:"-" bson:"api_title"`
-	ApiVersionAlt1    string   `json:"-" bson:"_version"`
-	ApiVersionAlt2    string   `json:"-" bson:"api_version"`
-	SourceAlt1        string   `json:"-" bson:"_api_url"`
-	SourceAlt2        string   `json:"-" bson:"url"`
+	SpecificationJson bson.Raw  `bson:"api"`
+	NameAlt           string    `bson:"api_title"`
+	ApiVersionAlt1    string    `bson:"_version"`
+	ApiVersionAlt2    string    `bson:"api_version"`
+	SourceAlt1        string    `bson:"_api_url"`
+	SourceAlt2        string    `bson:"url"`
+	DateAlt1          time.Time `bson:"_created_at"`
+	DateAlt2          time.Time `bson:"commit_date"`
 }
 
 type MongoDocument struct {
 	MongoId       string        `json:"mongo-id"`
+	Length        int           `json:"length"`
+	Date          time.Time     `json:"date"`
+	Score         float64       `json:"score"`
 	Api           Api           `json:"api"`
 	Specification Specification `json:"specification"`
 }
@@ -72,13 +79,16 @@ func (b *MongoResponse) InitObject() MongoDocument {
 		b.Name = b.NameAlt
 		b.ApiVersion = GetSemanticVersion(b.ApiVersionAlt2)
 		b.Source = GetSource(b.SourceAlt2)
+		b.Date = b.DateAlt2
 	} else {
 		b.ApiVersion = GetSemanticVersion(b.ApiVersionAlt1)
 		b.Source = GetSource(b.SourceAlt1)
+		b.Date = b.DateAlt1
 	}
 
 	return MongoDocument{
 		MongoId: b.MongoId,
+		Date:    b.Date,
 		Api: Api{
 			Id:      b.Id,
 			Name:    b.Name,

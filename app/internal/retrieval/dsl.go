@@ -24,12 +24,18 @@ func CreateEsFilter(filters []models.Filter) *string {
 	var esFilter strings.Builder
 	esFilter.WriteString(`"bool": {`)
 
+	filterCommits := false
+
 	for index, filter := range filters {
 		pathArray := strings.Split(filter.Lhs, ".")
 		path := strings.Join(slices.Delete(pathArray, len(pathArray)-1, len(pathArray)), ".")
 
-		parsed, positive := filter.ToEsFilter()
-		query := `{"nested": {"path": "metadata.` + path + `", "query": {` + parsed + "}}}"
+		if len(path) != 0 {
+			path = "." + path
+		}
+
+			parsed, positive := filter.ToEsFilter()
+		query := `{"nested": {"path": "metadata` + path + `", "query": {` + parsed + "}}}"
 
 		if index != len(filters)-1 {
 			query += ","
@@ -40,9 +46,24 @@ func CreateEsFilter(filters []models.Filter) *string {
 		} else {
 			mustNot.WriteString(query)
 		}
+
+		if strings.Compare(filter.Lhs, "api.commits") == 0 {
+			filterCommits = true
+		}
 	}
 
-	esFilter.WriteString(`"must": [` + must.String() + `], `)
+	esFilter.WriteString(`"must": [` + must.String())
+
+	if len(must.String()) != 0 {
+		esFilter.WriteString(", ")
+	}
+
+	if !filterCommits {
+		esFilter.WriteString(`{"nested": {"path": "metadata.api", "query": {"term": {"metadata.api.latest": true}}}}, `)
+	}
+
+	esFilter.WriteString(`{"nested": {"path": "metadata", "query": {"range": {"metadata.length": {"gte": 200}}}}}, `)
+	esFilter.WriteString(`{"nested": {"path": "metadata.api", "query": {"regexp": {"metadata.api.name": ".+"}}}}], `)
 	esFilter.WriteString(`"must_not": [` + mustNot.String() + `]`)
 	esFilter.WriteString("}")
 	res := esFilter.String()
@@ -62,12 +83,20 @@ func CreateFilters(filtersRaw []string) ([]models.Filter, error) {
 					// Range operation is split into two operations.
 					// e.g. api.commits<>[1,5] => api.commits>=1 api.commits<=5
 					if strings.Compare(operator, "<>") == 0 {
+						if _, in := models.BracketsMap[string(sides[1][0])]; !in {
+							return nil, errors.New("in the range, you can only use [, ], ), or )")
+						}
+
+						if _, in := models.BracketsMap[string(sides[1][len(sides[1])-1])]; !in {
+							return nil, errors.New("in the range, you can only use [, ], ), or )")
+						}
+
 						limits := strings.Split(strings.Trim(sides[1], "[()]"), ",")
 						bracketL := models.BracketsMap[string(sides[1][0])]
 						bracketR := models.BracketsMap[string(sides[1][len(sides[1])-1])]
 
 						if len(limits) != 2 {
-							return nil, errors.New("there are less than two numbers in the range")
+							return nil, errors.New("there are less than two elements in the range")
 						}
 
 						limitL := limits[0]

@@ -24,6 +24,7 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 
 		if err != nil {
 			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+			return
 		}
 
 		current := 1
@@ -37,7 +38,7 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 			err := documents.Decode(&document)
 
 			if err != nil {
-				NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 				return
 			}
 
@@ -56,22 +57,23 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 
 			if len(res.Hits.Hits) == 0 {
 				var embeddings *models.EmbeddingResponse
-				embeddings, err = embedding.PerformPipeline([]string{specification.String()}, false)
+				embeddings, length, err := embedding.PerformPipeline([]string{specification.String()}, false)
 
 				if err != nil {
-					NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+					NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 					return
 				}
 
 				if len(embeddings.Predictions) != 0 {
 					var esDocument models.EsRequest
 					esDocument.MongoDocument = mongoDocument
+					esDocument.MongoDocument.Length = length
 					esDocument.Embedding = embeddings.Predictions[0]
 
 					err = elastic.InsertDocument(elasticClient, esDocument, "apis")
 
 					if err != nil {
-						NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+						NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 						return
 					}
 				} else {

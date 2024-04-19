@@ -20,7 +20,7 @@ func PreprocessFragment(fragments []string, isQuery bool) []string {
 		cleanFragment = ExtractTags(cleanFragment)
 	}
 
-	return Stemming(StopWordRemoval(cleanFragment))
+	return cleanFragment
 }
 
 // ExtractTags - extract the NL tags from a fragment (JSON document documenting a REST API), and return an array of
@@ -28,6 +28,7 @@ func PreprocessFragment(fragments []string, isQuery bool) []string {
 func ExtractTags(fragments []string) []string {
 	var nlFragments []string
 	nlTagsRegex := regexp.MustCompile(`['"](?:description|name|title|summary)['"]:\s"([^"]+)"|'([^']+)'`)
+	urlsRegex := regexp.MustCompile(`https?://(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&/=]*)`)
 
 	for _, fragment := range fragments {
 		var nlFragmentTags []string
@@ -43,8 +44,13 @@ func ExtractTags(fragments []string) []string {
 			}
 		}
 
+		// Remove Markdown syntax
+		cleanFragment := stripmd.Strip(strings.Join(nlFragmentTags, " "))
+		// Remove URLs
+		cleanFragment = urlsRegex.ReplaceAllString(cleanFragment, "")
+
 		// Join all extracted strings, remove all Markdown formatting, and append to fragments array
-		nlFragments = append(nlFragments, stripmd.Strip(strings.Join(nlFragmentTags, " ")))
+		nlFragments = append(nlFragments, cleanFragment)
 	}
 
 	return nlFragments

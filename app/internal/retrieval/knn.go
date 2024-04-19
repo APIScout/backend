@@ -10,21 +10,29 @@ import (
 func CreateKnnQuery(embedding []float32, filters string, pageSize int, page int, k int) string {
 	var query strings.Builder
 
-	query.WriteString(`{"from": ` + strconv.Itoa(((page - 1) * pageSize) + 1) + `, "size": ` + strconv.Itoa(pageSize))
-  	query.WriteString(`, "knn": {"field": "embedding", "query_vector": [`)
+	query.WriteString(`{"from": ` + strconv.Itoa((page - 1) * pageSize) + `, "size": ` + strconv.Itoa(pageSize))
 
-	for ind, el := range embedding {
-		value := reflect.ValueOf(el).Float()
-		query.WriteString(fmt.Sprintf(`%f`, value))
+	if embedding != nil {
+		query.WriteString(`, "knn": {"field": "embedding", "query_vector": [`)
 
-		if ind != len(embedding)-1 {
-			query.WriteString(", ")
+		for ind, el := range embedding {
+			value := reflect.ValueOf(el).Float()
+			query.WriteString(fmt.Sprintf(`%f`, value))
+
+			if ind != len(embedding)-1 {
+				query.WriteString(", ")
+			}
 		}
+
+		query.WriteString(`], "k": ` + strconv.Itoa(k) + `, "num_candidates": 1000, "filter": {`)
+		query.WriteString(filters)
+		query.WriteString(`}}}`)
+	} else {
+		query.WriteString(`, "query": {`)
+		query.WriteString(filters)
+		query.WriteString("}}")
 	}
 
-	query.WriteString(`], "k": ` + strconv.Itoa(k) + `, "num_candidates": 1000, "filter": {`)
-	query.WriteString(filters)
-	query.WriteString(`}}}`)
 
 	return query.String()
 }

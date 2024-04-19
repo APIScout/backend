@@ -121,7 +121,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 		}
 
 		var embeddings *models.EmbeddingResponse
-		embeddings, err = embedding.PerformPipeline(specifications, false)
+		embeddings, _, err = embedding.PerformPipeline(specifications, false)
 
 		if err != nil {
 			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
