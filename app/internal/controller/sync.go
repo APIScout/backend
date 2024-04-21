@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"fmt"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"net/http"
 
@@ -15,6 +14,7 @@ import (
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -32,7 +32,8 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 		total := 1422195
 
 		for documents.Next(context.TODO()) {
-			log.Printf("Saving document %d/%d - [%d%%]", current, total, current/total*100)
+			percentage := float64(current) / float64(total) * 100.0
+			log.Printf("Saving document %d/%d - [%.1f%%]", current, total, percentage)
 
 			var document models.MongoResponse
 			specification := documents.Current.Lookup("api")
