@@ -32,7 +32,7 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 		total := 1422195
 
 		for documents.Next(context.TODO()) {
-			log.Printf("Saving document %d/%d - [%d%%]", current, total, current/total)
+			log.Printf("Saving document %d/%d - [%d%%]", current, total, current/total*100)
 
 			var document models.MongoResponse
 			specification := documents.Current.Lookup("api")
