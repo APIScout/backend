@@ -63,7 +63,7 @@ func GetSpecificationHandler(mongoClient *mongo.Client, elasticClient *elasticse
 		response, err := elastic.SearchDocument(elasticClient, queryElastic, "apis")
 
 		if err != nil {
-			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+			NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 			return
 		}
 
@@ -77,7 +77,7 @@ func GetSpecificationHandler(mongoClient *mongo.Client, elasticClient *elasticse
 		specObj.Specification = specDoc.Lookup("api").String()
 
 		if err != nil {
-			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+			NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 			return
 		}
 
@@ -137,7 +137,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 		documentIDs, err := mongodb.InsertDocuments(db, specificationJSONs, "test")
 
 		if err != nil {
-			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+			NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 			return
 		}
 
@@ -145,7 +145,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 		embeddings, _, err = embedding.PerformPipeline(specifications, false)
 
 		if err != nil {
-			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+			NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 			return
 		}
 
@@ -153,7 +153,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 			jsonSpecification, err := json.Marshal(specificationJSONs[index])
 
 			if err != nil {
-				NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 				return
 			}
 
@@ -161,7 +161,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 			err = json.Unmarshal(jsonSpecification, &request.MongoDocument)
 
 			if err != nil {
-				NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 				return
 			}
 
@@ -171,7 +171,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 			err = elastic.InsertDocument(elasticClient, request, "test")
 
 			if err != nil {
-				NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 				return
 			}
 		}

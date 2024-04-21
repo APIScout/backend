@@ -1,4 +1,5 @@
 version: "2.2"
+
 services:
   models:
     image: tensorflow/serving
@@ -6,7 +7,7 @@ services:
     environment:
       MODEL_NAME: "universal-encoder"
     networks:
-      - be-network
+      - backend-network
     volumes:
       - ./models/universal-encoder:/models/universal-encoder
 
@@ -17,19 +18,13 @@ services:
       GIN_MODE: "release"
       MODELS_HOST: "models"
     networks:
-      - be-network
-      - mongo-network
-      - elastic-network
+      - backend-network
     ports:
       - "8080:8080"
     volumes:
       - ./config:/backend/config
+
 networks:
-  be-network:
-    driver: bridge
-  mongo-network:
-    name: mongo_mongo-network
-    external: true
-  elastic-network:
-    name: elastic_es-network
+  backend-network:
+    name: backend-network
     external: true

@@ -83,7 +83,7 @@ func SearchHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Clien
 		response, err := elastic.SearchDocument(elasticClient, query, "apis")
 
 		if err != nil {
-			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+			NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 			return
 		}
 
@@ -95,7 +95,7 @@ func SearchHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Clien
 			document, err := mongodb.RetrieveDocument(db, bson.M{"_id": objId}, "specifications")
 
 			if err != nil {
-				NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 				return
 			}
 
@@ -109,7 +109,7 @@ func SearchHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Clien
 			specObj.Specification = document.Lookup("api").String()
 
 			if err != nil {
-				NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 				return
 			}
 

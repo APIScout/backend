@@ -24,7 +24,7 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 		documents, err := mongodb.RetrieveDocuments(mongoClient.Database("apis"), bson.D{{}}, "specifications")
 
 		if err != nil {
-			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+			NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 			return
 		}
 
