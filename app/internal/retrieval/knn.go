@@ -33,7 +33,5 @@ func CreateKnnQuery(embedding []float32, filters string, pageSize int, page int,
 		query.WriteString("}}")
 	}
 
-	fmt.Print(query.String())
-
 	return query.String()
 }
