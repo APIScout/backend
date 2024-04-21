@@ -5,22 +5,26 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var Operators = []string{"==", "!=", "~=", "<>", ">=", "<=", ">", "<"}
 var NegOperators = []string{"!="}
 
 var OperatorsMap = map[string][]string{
-	"==": {"bool", "str", "int", "version"},
-	"!=": {"bool", "str", "int", "version"},
+	"==": {"bool", "str", "int", "version", "date"},
+	"!=": {"bool", "str", "int", "version", "date"},
 	"~=": {"str", "version"},
-	">=": {"int", "version"},
-	"<=": {"int", "version"},
-	">":  {"int", "version"},
-	"<":  {"int", "version"},
+	">=": {"int", "version", "date"},
+	"<=": {"int", "version", "date"},
+	">":  {"int", "version", "date"},
+	"<":  {"int", "version", "date"},
 }
 
 var TypesMap = map[string]string{
+	"date":   "date",
+	"length": "int",
+
 	"api.version.raw":        "version",
 	"api.version.valid":      "bool",
 	"api.version.major":      "int",
@@ -41,6 +45,13 @@ var TypesMap = map[string]string{
 	"specification.version.prerelease": "str",
 	"specification.version.build":      "str",
 	"specification.type":               "str",
+
+	"metrics.security.endpoints":   "int",
+	"metrics.schema.models":        "int",
+	"metrics.schema.properties":    "int",
+	"metrics.structure.paths":      "int",
+	"metrics.structure.operations": "int",
+	"metrics.structure.methods":    "int",
 }
 
 var OperatorToEsMap = map[string]string{
@@ -92,6 +103,11 @@ func (filter *Filter) Validate() error {
 			if _, err := strconv.ParseInt(filter.Rhs, 10, 64); err == nil {
 				return nil
 			}
+		case "date":
+			if res, err := time.Parse("02/01/2006", filter.Rhs); err == nil {
+				filter.Rhs = res.Format(time.RFC3339)
+				return nil
+			}
 		}
 	}
 
@@ -111,7 +127,7 @@ func (filter *Filter) ToEsFilter() (string, bool) {
 	case "gte", "lte", "gt", "lt":
 		rhs := filter.Rhs
 
-		if TypesMap[filter.Lhs] == "version" {
+		if TypesMap[filter.Lhs] == "version" || TypesMap[filter.Lhs] == "date" {
 			rhs = `"` + rhs + `"`
 		}
 

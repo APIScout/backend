@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"backend/app/internal/elastic"
@@ -24,11 +25,11 @@ import (
 //	@Accept			json
 //	@Produce		json
 //	@Param			id	path		string	true	"Specification ID"
-//	@Success		200	{object}	models.MongoResponseWithApi
+//	@Success		200	{object}	models.SpecificationWithApi
 //	@Failure		400	{object}	models.HTTPError
 //	@Failure		500	{object}	models.HTTPError
 //	@Router			/specification/{id} [get]
-func GetSpecificationHandler(mongoClient *mongo.Client) gin.HandlerFunc {
+func GetSpecificationHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Client) gin.HandlerFunc {
 	fn := func(ctx *gin.Context) {
 		id := ctx.Param("id")
 		db := mongoClient.Database("apis")
@@ -48,11 +49,32 @@ func GetSpecificationHandler(mongoClient *mongo.Client) gin.HandlerFunc {
 			return
 		}
 
+		var doc models.MongoResponse
+		err = bson.Unmarshal(specDoc, &doc)
+
+		if err != nil {
+			NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		queryElastic := fmt.Sprintf(
+			`{"query": {"nested": {"path": "metadata", "query": {"match": {"metadata.mongo-id": "%s"}}}}}`,
+			doc.MongoId)
+		response, err := elastic.SearchDocument(elasticClient, queryElastic, "apis")
+
+		if err != nil {
+			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
+			return
+		}
+
 		// Unmarshal raw bson into MongoResponse object
-		var jsonMap models.MongoResponseWithApi
-		err = bson.Unmarshal(specDoc, &jsonMap.MongoResponse)
-		jsonMap.MongoResponse.InitObject()
-		jsonMap.Specification = specDoc.Lookup("api").String()
+		var specObj models.SpecificationWithApi
+		var jsonMap models.MongoResponse
+		err = bson.Unmarshal(specDoc, &jsonMap)
+		specObj.MongoDocument = jsonMap.InitObject()
+		specObj.MongoDocument.Length = response.Hits.Hits[0].Document.Metadata.Length
+		specObj.MongoDocument.Metrics = response.Hits.Hits[0].Document.Metadata.Metrics
+		specObj.Specification = specDoc.Lookup("api").String()
 
 		if err != nil {
 			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")
@@ -60,7 +82,7 @@ func GetSpecificationHandler(mongoClient *mongo.Client) gin.HandlerFunc {
 		}
 
 		// Return the JSON representation of the document
-		ctx.JSON(http.StatusOK, jsonMap)
+		ctx.JSON(http.StatusOK, specObj)
 	}
 
 	return fn
@@ -120,7 +142,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 		}
 
 		var embeddings *models.EmbeddingResponse
-		embeddings, err = embedding.PerformPipeline(specifications, false)
+		embeddings, _, err = embedding.PerformPipeline(specifications, false)
 
 		if err != nil {
 			NewHTTPError(ctx, http.StatusInternalServerError, "Something went wrong, try again later")

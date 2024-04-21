@@ -3,8 +3,10 @@ package elastic
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 
@@ -25,10 +27,12 @@ func InsertDocument(client *elasticsearch.Client, document models.EsRequest, ind
 
 	res, err := client.Index(index, bytes.NewReader(jsonDocument))
 
-	if err == nil {
+	if res != nil && res.StatusCode == http.StatusCreated {
 		if os.Getenv("GIN_MODE") == "debug" {
 			log.Printf("[ELASTIC-debug] Indexing: %s", res.Status())
 		}
+	} else {
+		return errors.New("could not insert document")
 	}
 
 	return err

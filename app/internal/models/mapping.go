@@ -7,12 +7,14 @@ var mapping = `{
         "type": "nested",
         "properties": {
           "mongo-id": { "type": "text" },
+          "length": { "type": "long" },
+          "date": { "type": "date" },
           "api": {
             "type": "nested",
             "properties": {
               "name": { "type": "text" },
               "id": { "type": "text" },
-              "commits": { "type": "short" },
+              "commits": { "type": "long" },
               "latest": { "type": "boolean" },
               "source": { "type": "text" },
               "version": {
@@ -20,14 +22,40 @@ var mapping = `{
                 "properties": {
                   "raw": { "type": "version" },
                   "valid": { "type": "boolean" },
-                  "major": { "type": "short" },
-                  "minor": { "type": "short" },
-                  "patch": { "type": "short" },
+                  "major": { "type": "long" },
+                  "minor": { "type": "long" },
+                  "patch": { "type": "long" },
                   "prerelease": { "type": "text" },
                   "build": { "type": "text" }
                 }
               }
 			}
+          },
+          "metrics": {
+            "type": "nested",
+            "properties": {
+              "security": {
+                "type": "nested",
+                "properties": {
+                  "endpoints": { "type": "long" }
+                }
+              },
+              "schema": {
+                "type": "nested",
+                "properties": {
+                  "models": { "type": "long" },
+                  "properties": { "type": "long" }
+                }
+              },
+              "structure": {
+                "type": "nested",
+                "properties": {
+                  "paths": { "type": "long" },
+                  "operations": { "type": "long" },
+                  "methods": { "type": "long" }
+                }
+              }
+            }
           },
           "specification": {
             "type": "nested",
@@ -38,9 +66,9 @@ var mapping = `{
                 "properties": {
                   "raw": { "type": "version" },
                   "valid": { "type": "boolean" },
-                  "major": { "type": "short" },
-                  "minor": { "type": "short" },
-                  "patch": { "type": "short" },
+                  "major": { "type": "long" },
+                  "minor": { "type": "long" },
+                  "patch": { "type": "long" },
                   "prerelease": { "type": "text" },
                   "build": { "type": "text" }
                 }

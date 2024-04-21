@@ -1,11 +1,11 @@
 package models
 
 import (
+	"go.mongodb.org/mongo-driver/bson"
 	"regexp"
 	"strconv"
 	"strings"
-
-	"go.mongodb.org/mongo-driver/bson"
+	"time"
 )
 
 // MongoResponse - structure of the Mongo document sent by the db
@@ -15,22 +15,30 @@ type MongoResponse struct {
 	Name       string `bson:"_name"`
 	Commits    int    `bson:"commits"`
 	Latest     bool   `bson:"latest"`
+	Score      bool
 	OASType    string
 	Source     string
+	Date       time.Time
 	ApiVersion Version
 	OASVersion Version
 
-	SpecificationJson bson.Raw `json:"-" bson:"api"`
-	NameAlt           string   `bson:"api_title"`
-	ApiVersionAlt1    string   `bson:"_version"`
-	ApiVersionAlt2    string   `bson:"api_version"`
-	SourceAlt1        string   `bson:"_api_url"`
-	SourceAlt2        string   `bson:"url"`
+	SpecificationJson bson.Raw  `bson:"api"`
+	NameAlt           string    `bson:"api_title"`
+	ApiVersionAlt1    string    `bson:"_version"`
+	ApiVersionAlt2    string    `bson:"api_version"`
+	SourceAlt1        string    `bson:"_api_url"`
+	SourceAlt2        string    `bson:"url"`
+	DateAlt1          time.Time `bson:"_created_at"`
+	DateAlt2          time.Time `bson:"commit_date"`
 }
 
 type MongoDocument struct {
 	MongoId       string        `json:"mongo-id"`
+	Length        int           `json:"length"`
+	Date          time.Time     `json:"date"`
+	Score         float64       `json:"score,omitempty"`
 	Api           Api           `json:"api"`
+	Metrics       Metrics       `json:"metrics"`
 	Specification Specification `json:"specification"`
 }
 
@@ -41,6 +49,21 @@ type Api struct {
 	Commits int     `json:"commits"`
 	Latest  bool    `json:"latest"`
 	Source  string  `json:"source"`
+}
+
+type Metrics struct {
+	Security struct {
+		Endpoints int `json:"endpoints" bson:"endpointsCount"`
+	} `json:"security" bson:"securityData"`
+	Schema struct {
+		Models     int `json:"models" bson:"schemas"`
+		Properties int `json:"properties" bson:"properties"`
+	} `json:"schema" bson:"schemaSize"`
+	Structure struct {
+		Paths      int `json:"paths" bson:"paths"`
+		Operations int `json:"operations" bson:"operations"`
+		Methods    int `json:"methods" bson:"used_methods"`
+	} `json:"structure" bson:"structureSize"`
 }
 
 type Specification struct {
@@ -58,9 +81,9 @@ type Version struct {
 	Build      string `json:"build"`
 }
 
-// MongoResponseWithApi - structure containing both the mongo document and the embedding created by the backend
-type MongoResponseWithApi struct {
-	MongoResponse MongoResponse `json:"metadata"`
+// SpecificationWithApi - structure containing both the mongo document and the embedding created by the backend
+type SpecificationWithApi struct {
+	MongoDocument MongoDocument `json:"metadata"`
 	Specification string        `json:"specification"`
 }
 
@@ -72,13 +95,16 @@ func (b *MongoResponse) InitObject() MongoDocument {
 		b.Name = b.NameAlt
 		b.ApiVersion = GetSemanticVersion(b.ApiVersionAlt2)
 		b.Source = GetSource(b.SourceAlt2)
+		b.Date = b.DateAlt2
 	} else {
 		b.ApiVersion = GetSemanticVersion(b.ApiVersionAlt1)
 		b.Source = GetSource(b.SourceAlt1)
+		b.Date = b.DateAlt1
 	}
 
 	return MongoDocument{
 		MongoId: b.MongoId,
+		Date:    b.Date,
 		Api: Api{
 			Id:      b.Id,
 			Name:    b.Name,
