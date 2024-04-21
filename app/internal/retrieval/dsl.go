@@ -25,6 +25,7 @@ func CreateEsFilter(filters []models.Filter) *string {
 	esFilter.WriteString(`"bool": {`)
 
 	filterCommits := false
+	filterLength := false
 
 	for index, filter := range filters {
 		pathArray := strings.Split(filter.Lhs, ".")
@@ -34,7 +35,7 @@ func CreateEsFilter(filters []models.Filter) *string {
 			path = "." + path
 		}
 
-			parsed, positive := filter.ToEsFilter()
+		parsed, positive := filter.ToEsFilter()
 		query := `{"nested": {"path": "metadata` + path + `", "query": {` + parsed + "}}}"
 
 		if index != len(filters)-1 {
@@ -50,6 +51,10 @@ func CreateEsFilter(filters []models.Filter) *string {
 		if strings.Compare(filter.Lhs, "api.commits") == 0 {
 			filterCommits = true
 		}
+
+		if strings.Compare(filter.Lhs, "length") == 0 {
+			filterLength = true
+		}
 	}
 
 	esFilter.WriteString(`"must": [` + must.String())
@@ -62,7 +67,10 @@ func CreateEsFilter(filters []models.Filter) *string {
 		esFilter.WriteString(`{"nested": {"path": "metadata.api", "query": {"term": {"metadata.api.latest": true}}}}, `)
 	}
 
-	esFilter.WriteString(`{"nested": {"path": "metadata", "query": {"range": {"metadata.length": {"gte": 200}}}}}, `)
+	if !filterLength {
+		esFilter.WriteString(`{"nested": {"path": "metadata", "query": {"range": {"metadata.length": {"gte": 500}}}}}, `)
+	}
+
 	esFilter.WriteString(`{"nested": {"path": "metadata.api", "query": {"regexp": {"metadata.api.name": ".+"}}}}], `)
 	esFilter.WriteString(`"must_not": [` + mustNot.String() + `]`)
 	esFilter.WriteString("}")

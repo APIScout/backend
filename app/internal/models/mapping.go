@@ -31,6 +31,32 @@ var mapping = `{
               }
 			}
           },
+          "metrics": {
+            "type": "nested",
+            "properties": {
+              "security": {
+                "type": "nested",
+                "properties": {
+                  "endpoints": { "type": "long" }
+                }
+              },
+              "schema": {
+                "type": "nested",
+                "properties": {
+                  "models": { "type": "long" },
+                  "properties": { "type": "long" }
+                }
+              },
+              "structure": {
+                "type": "nested",
+                "properties": {
+                  "paths": { "type": "long" },
+                  "operations": { "type": "long" },
+                  "methods": { "type": "long" }
+                }
+              }
+            }
+          },
           "specification": {
             "type": "nested",
             "properties": {

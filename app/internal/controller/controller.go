@@ -21,7 +21,7 @@ func SetupRoutes(router *gin.Engine, config *models.Config) {
 		spec := v1.Group("/specification")
 		{
 			spec.POST("/", PostSpecificationHandler(mongoClient, elasticClient))
-			spec.GET("/:id", GetSpecificationHandler(mongoClient))
+			spec.GET("/:id", GetSpecificationHandler(mongoClient, elasticClient))
 			spec.PUT("/sync", SyncSpecificationsHandler(mongoClient, elasticClient))
 		}
 	}

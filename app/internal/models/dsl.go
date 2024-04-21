@@ -22,7 +22,8 @@ var OperatorsMap = map[string][]string{
 }
 
 var TypesMap = map[string]string{
-	"date": "date",
+	"date":   "date",
+	"length": "int",
 
 	"api.version.raw":        "version",
 	"api.version.valid":      "bool",
@@ -44,6 +45,13 @@ var TypesMap = map[string]string{
 	"specification.version.prerelease": "str",
 	"specification.version.build":      "str",
 	"specification.type":               "str",
+
+	"metrics.security.endpoints":   "int",
+	"metrics.schema.models":        "int",
+	"metrics.schema.properties":    "int",
+	"metrics.structure.paths":      "int",
+	"metrics.structure.operations": "int",
+	"metrics.structure.methods":    "int",
 }
 
 var OperatorToEsMap = map[string]string{

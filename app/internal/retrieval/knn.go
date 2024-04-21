@@ -24,7 +24,7 @@ func CreateKnnQuery(embedding []float32, filters string, pageSize int, page int,
 			}
 		}
 
-		query.WriteString(`], "k": ` + strconv.Itoa(k) + `, "num_candidates": 1000, "filter": {`)
+		query.WriteString(`], "k": ` + strconv.Itoa(k) + `, "num_candidates": 10000, "filter": {`)
 		query.WriteString(filters)
 		query.WriteString(`}}}`)
 	} else {
@@ -33,6 +33,7 @@ func CreateKnnQuery(embedding []float32, filters string, pageSize int, page int,
 		query.WriteString("}}")
 	}
 
+	fmt.Print(query.String())
 
 	return query.String()
 }

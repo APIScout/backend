@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"net/http"
 
@@ -70,6 +71,30 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 					esDocument.MongoDocument.Length = length
 					esDocument.Embedding = embeddings.Predictions[0]
 
+					id, err := primitive.ObjectIDFromHex(mongoDocument.MongoId)
+
+					if err != nil {
+						NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
+						return
+					}
+
+					var metricsDocument models.Metrics
+
+					database := mongoClient.Database("apis")
+					metrics, err := mongodb.RetrieveDocument(database, bson.M{"_id": id}, "metrics")
+
+					if err != nil {
+						log.Print("No metrics found for this document")
+					}
+
+					err = bson.Unmarshal(metrics, &metricsDocument)
+
+					if err != nil {
+						NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
+						return
+					}
+
+					esDocument.MongoDocument.Metrics = metricsDocument
 					err = elastic.InsertDocument(elasticClient, esDocument, "apis")
 
 					if err != nil {

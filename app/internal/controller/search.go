@@ -6,7 +6,6 @@ import (
 	"backend/app/internal/models"
 	"backend/app/internal/mongodb"
 	"backend/app/internal/retrieval"
-
 	"errors"
 	"fmt"
 	"net/http"
@@ -106,6 +105,7 @@ func SearchHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Clien
 			specObj.MongoDocument = jsonMap.InitObject()
 			specObj.MongoDocument.Length = item.Document.Metadata.Length
 			specObj.MongoDocument.Score = item.Score
+			specObj.MongoDocument.Metrics = item.Document.Metadata.Metrics
 			specObj.Specification = document.Lookup("api").String()
 
 			if err != nil {

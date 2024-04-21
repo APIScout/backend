@@ -20,8 +20,9 @@ type Hit struct {
 	Score    float64 `json:"_score"`
 	Document struct {
 		Metadata struct {
-			MongoId string `json:"mongo-id"`
-			Length  int    `json:"length"`
+			MongoId string  `json:"mongo-id"`
+			Length  int     `json:"length"`
+			Metrics Metrics `json:"metrics"`
 		} `json:"metadata"`
 		Embedding []float32 `json:"embedding"`
 	} `json:"_source"`

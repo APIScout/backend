@@ -36,8 +36,9 @@ type MongoDocument struct {
 	MongoId       string        `json:"mongo-id"`
 	Length        int           `json:"length"`
 	Date          time.Time     `json:"date"`
-	Score         float64       `json:"score"`
+	Score         float64       `json:"score,omitempty"`
 	Api           Api           `json:"api"`
+	Metrics       Metrics       `json:"metrics"`
 	Specification Specification `json:"specification"`
 }
 
@@ -48,6 +49,21 @@ type Api struct {
 	Commits int     `json:"commits"`
 	Latest  bool    `json:"latest"`
 	Source  string  `json:"source"`
+}
+
+type Metrics struct {
+	Security struct {
+		Endpoints int `json:"endpoints" bson:"endpointsCount"`
+	} `json:"security" bson:"securityData"`
+	Schema struct {
+		Models     int `json:"models" bson:"schemas"`
+		Properties int `json:"properties" bson:"properties"`
+	} `json:"schema" bson:"schemaSize"`
+	Structure struct {
+		Paths      int `json:"paths" bson:"paths"`
+		Operations int `json:"operations" bson:"operations"`
+		Methods    int `json:"methods" bson:"used_methods"`
+	} `json:"structure" bson:"structureSize"`
 }
 
 type Specification struct {
