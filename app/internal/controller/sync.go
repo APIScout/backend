@@ -72,7 +72,7 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 			start := time.Now().UnixNano()
 
 			percentage := (float64(current) / float64(total)) * 100.0
-			totTime := (float64(prec) * float64(total)) / 3600000000000.0
+			totTime := (float64(prec) * float64(int64(current) - total)) / 3600000000000.0
 			log.Printf("Saving document %d/%d - [%.1f%%] - Done in: %.1fh", current, total, percentage, totTime)
 
 			if skip > current {
