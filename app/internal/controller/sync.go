@@ -3,8 +3,12 @@ package controller
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"net/http"
+	"strconv"
+	"strings"
+	"time"
 
 	"backend/app/internal/elastic"
 	"backend/app/internal/embedding"
@@ -19,9 +23,32 @@ import (
 )
 
 func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Client) gin.HandlerFunc {
-	// TODO: Move SyncSpecificationsHandler function somewhere else
 	fn := func(ctx *gin.Context) {
-		documents, err := mongodb.RetrieveDocuments(mongoClient.Database("apis"), bson.D{{}}, "specifications")
+		var documents *mongo.Cursor
+		var err error
+
+		skip := 0
+		skipQuery := ctx.Query("skip")
+
+		if strings.Compare(skipQuery, "") != 0 && strings.Compare(skipQuery, "auto") != 0 {
+			skip, err = strconv.Atoi(skipQuery)
+
+			if err != nil {
+				NewHTTPError(ctx, http.StatusInternalServerError, "the skip parameter must be a number")
+				return
+			}
+		} else if strings.Compare(skipQuery, "auto") == 0 {
+			count, err := elastic.GetDocumentCount(elasticClient, "apis")
+
+			if err != nil {
+				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
+				return
+			}
+
+			skip = int(count)
+		}
+
+		documents, err = mongodb.RetrieveDocuments(mongoClient.Database("apis"), bson.D{{}}, "specifications")
 
 		if err != nil {
 			NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
@@ -29,11 +56,33 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 		}
 
 		current := 1
-		total := 1422195
+		total, err := mongoClient.Database("apis").Collection("specifications").CountDocuments(
+			context.TODO(),
+			bson.D{},
+			options.Count().SetHint("_id_"),
+		)
+
+		if err != nil {
+			panic(err)
+		}
+
+		var prec int64
 
 		for documents.Next(context.TODO()) {
-			percentage := float64(current) / float64(total) * 100.0
-			log.Printf("Saving document %d/%d - [%.1f%%]", current, total, percentage)
+			start := time.Now().UnixNano()
+
+			percentage := (float64(current) / float64(total)) * 100.0
+			totTime := (float64(prec) * float64(total)) / 3600000000000.0
+			log.Printf("Saving document %d/%d - [%.1f%%] - Done in: %.1fh", current, total, percentage, totTime)
+
+			if skip > current {
+				log.Printf("Skip query set to %d, skipping...", skip)
+
+				prec = time.Now().UnixNano()-start
+				current++
+
+				continue
+			}
 
 			var document models.MongoResponse
 			specification := documents.Current.Lookup("api")
@@ -108,6 +157,9 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 			} else {
 				log.Printf("Already exists, skipping")
 			}
+
+			stop := time.Now().UnixNano()
+			prec = stop-start
 
 			current++
 		}

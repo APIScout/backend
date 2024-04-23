@@ -73,6 +73,32 @@ func SearchDocument(client *elasticsearch.Client, query string, index string) (*
 	return &response, err
 }
 
+func GetDocumentCount(client *elasticsearch.Client, index string) (int64, error) {
+	var docsCount struct{Count int64 `json:"count"`}
+
+	res, err := client.Count(
+		client.Count.WithIndex(index),
+		client.Count.WithContext(context.TODO()),
+	)
+
+	if err != nil {
+		return 0, err
+	}
+
+	out := new(bytes.Buffer)
+	b1 := bytes.NewBuffer([]byte{})
+	tr := io.TeeReader(res.Body, b1)
+	_, err = out.ReadFrom(tr)
+
+	if err != nil {
+		return 0, err
+	}
+
+	err = json.Unmarshal([]byte(out.String()), &docsCount)
+
+	return docsCount.Count, err
+}
+
 // DeleteDocument - delete a document in an index based on its id. An elasticsearch client, an id and an index need to
 // be passed to the function.
 func DeleteDocument(client *elasticsearch.Client, id string, index string) error {
