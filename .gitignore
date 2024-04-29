@@ -26,3 +26,5 @@ go.work
 !config/template.config.yml
 models/*
 !.keep
+
+mongo-ids.txt

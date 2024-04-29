@@ -122,6 +122,23 @@ func SearchHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Clien
 	return fn
 }
 
+func GetEmbedding(ctx *gin.Context) {
+	res := struct {
+		Query string `json:"query"`
+	}{}
+
+	err := ctx.BindJSON(&res)
+
+	if err != nil {
+		NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	res.Query = embedding.PreprocessFragment([]string{res.Query}, false)[0]
+
+	ctx.JSON(http.StatusOK, res)
+}
+
 func GetQueryValueAndValidate(ctx *gin.Context, key string) (int, error) {
 	if defaultValues, in := models.ParametersMap[key]; in {
 		if value, present := ctx.GetQuery(key); present {

@@ -89,8 +89,8 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 			err := documents.Decode(&document)
 
 			if err != nil {
-				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
-				return
+				log.Print("Error decoding document, skipping...",)
+				continue
 			}
 
 			log.Printf("Mongo ID: %s", document.MongoId)
@@ -102,8 +102,8 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 			res, err := elastic.SearchDocument(elasticClient, query, "apis")
 
 			if err != nil {
-				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
-				return
+				log.Print("Error retrieving document, skipping...",)
+				continue
 			}
 
 			if len(res.Hits.Hits) == 0 {
@@ -111,8 +111,8 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 				embeddings, length, err := embedding.PerformPipeline([]string{specification.String()}, false)
 
 				if err != nil {
-					NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
-					return
+					log.Print("Error embedding document, skipping...",)
+					continue
 				}
 
 				if len(embeddings.Predictions) != 0 {
@@ -124,8 +124,8 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 					id, err := primitive.ObjectIDFromHex(mongoDocument.MongoId)
 
 					if err != nil {
-						NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
-						return
+						log.Print("Error decoding document, skipping...",)
+						continue
 					}
 
 					var metricsDocument models.Metrics
@@ -135,21 +135,22 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 
 					if err != nil {
 						log.Print("No metrics found for this document")
+						continue
 					}
 
 					err = bson.Unmarshal(metrics, &metricsDocument)
 
 					if err != nil {
-						NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
-						return
+						log.Print("Error decoding metrics, skipping...",)
+						continue
 					}
 
 					esDocument.MongoDocument.Metrics = metricsDocument
 					err = elastic.InsertDocument(elasticClient, esDocument, "apis")
 
 					if err != nil {
-						NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
-						return
+						log.Print("Error inserting document, skipping...",)
+						continue
 					}
 				} else {
 					log.Print("No embedding was produced, skipping")
