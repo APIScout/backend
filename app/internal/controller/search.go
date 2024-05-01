@@ -118,6 +118,7 @@ func SearchHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Clien
 
 				if err != nil {
 					NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
+					return
 				}
 			}
 

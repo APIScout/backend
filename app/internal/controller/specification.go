@@ -95,6 +95,7 @@ func GetSpecificationHandler(mongoClient *mongo.Client, elasticClient *elasticse
 
 			if err != nil {
 				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
+				return
 			}
 		}
 

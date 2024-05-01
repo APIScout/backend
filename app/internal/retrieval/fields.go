@@ -8,7 +8,7 @@ import (
 )
 
 func FilterFields(response models.SpecificationWithApi, fields []string) (models.SpecificationWithApi, error) {
-	var filteredResponse models.SpecificationWithApi
+	var filteredResponse = new(models.SpecificationWithApi)
 
 	for _, field := range fields {
 		if slices.Contains(models.PossibleFilters, field) {
@@ -23,5 +23,5 @@ func FilterFields(response models.SpecificationWithApi, fields []string) (models
 		}
 	}
 
-	return filteredResponse, nil
+	return *filteredResponse, nil
 }

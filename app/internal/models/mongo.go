@@ -83,12 +83,12 @@ type Version struct {
 
 // SpecificationWithApi - structure containing both the mongo document and the embedding created by the backend
 type SpecificationWithApi struct {
-	MongoDocument MongoDocument `json:"metadata,omitempty"`
-	Specification string        `json:"specification,omitempty"`
+	MongoDocument *MongoDocument `json:"metadata,omitempty"`
+	Specification string         `json:"specification,omitempty"`
 }
 
 // InitObject - function to fix the initiated object
-func (b *MongoResponse) InitObject() MongoDocument {
+func (b *MongoResponse) InitObject() *MongoDocument {
 	GetOasVersion(b)
 
 	if strings.Compare(b.NameAlt, "") != 0 {
@@ -102,7 +102,7 @@ func (b *MongoResponse) InitObject() MongoDocument {
 		b.Date = b.DateAlt1
 	}
 
-	return MongoDocument{
+	return &MongoDocument{
 		MongoId: b.MongoId,
 		Date:    b.Date,
 		Api: Api{
