@@ -8,6 +8,7 @@ import (
 	"backend/app/internal/embedding"
 	"backend/app/internal/models"
 	"backend/app/internal/mongodb"
+	"backend/app/internal/retrieval"
 
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/gin-gonic/gin"
@@ -31,12 +32,20 @@ import (
 //	@Router			/specification/{id} [get]
 func GetSpecificationHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Client) gin.HandlerFunc {
 	fn := func(ctx *gin.Context) {
+		var body models.EmbeddingRequest
 		id := ctx.Param("id")
 		db := mongoClient.Database("apis")
 		objId, err := primitive.ObjectIDFromHex(id)
 
 		if err != nil {
 			NewHTTPError(ctx, http.StatusBadRequest, "The id has not been correctly formatted")
+			return
+		}
+
+		err = ctx.BindJSON(&body)
+
+		if err != nil {
+			NewHTTPError(ctx, http.StatusBadRequest, "The query has not been correctly formatted")
 			return
 		}
 
@@ -79,6 +88,14 @@ func GetSpecificationHandler(mongoClient *mongo.Client, elasticClient *elasticse
 		if err != nil {
 			NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 			return
+		}
+
+		if len(body.Fields) > 0 {
+			specObj, err = retrieval.FilterFields(specObj, body.Fields)
+
+			if err != nil {
+				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
+			}
 		}
 
 		// Return the JSON representation of the document

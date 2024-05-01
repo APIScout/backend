@@ -83,8 +83,8 @@ type Version struct {
 
 // SpecificationWithApi - structure containing both the mongo document and the embedding created by the backend
 type SpecificationWithApi struct {
-	MongoDocument MongoDocument `json:"metadata"`
-	Specification string        `json:"specification"`
+	MongoDocument MongoDocument `json:"metadata,omitempty"`
+	Specification string        `json:"specification,omitempty"`
 }
 
 // InitObject - function to fix the initiated object

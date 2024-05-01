@@ -113,6 +113,14 @@ func SearchHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Clien
 				return
 			}
 
+			if len(body.Fields) > 0 {
+				specObj, err = retrieval.FilterFields(specObj, body.Fields)
+
+				if err != nil {
+					NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
+				}
+			}
+
 			jsonMaps = append(jsonMaps, specObj)
 		}
 
