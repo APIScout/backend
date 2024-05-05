@@ -36,6 +36,7 @@ var TypesMap = map[string]string{
 	"api.commits":            "int",
 	"api.latest":             "bool",
 	"api.source":             "str",
+	"api.id":                 "int",
 
 	"specification.version.raw":        "version",
 	"specification.version.valid":      "bool",

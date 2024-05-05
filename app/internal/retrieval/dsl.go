@@ -48,7 +48,7 @@ func CreateEsFilter(filters []models.Filter) *string {
 			mustNot.WriteString(query)
 		}
 
-		if strings.Compare(filter.Lhs, "api.commits") == 0 {
+		if strings.Compare(filter.Lhs, "api.commits") == 0 || strings.Compare(filter.Lhs, "api.id") == 0 {
 			filterCommits = true
 		}
 

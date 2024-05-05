@@ -80,6 +80,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.HTTPError"
                         }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.HTTPError"
+                        }
                     }
                 }
             }
@@ -199,6 +205,12 @@ const docTemplate = `{
         "models.EmbeddingRequest": {
             "type": "object",
             "properties": {
+                "fields": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "filters": {
                     "type": "string"
                 },
@@ -220,14 +232,64 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Metrics": {
+            "type": "object",
+            "properties": {
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "models": {
+                            "type": "integer"
+                        },
+                        "properties": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "security": {
+                    "type": "object",
+                    "properties": {
+                        "endpoints": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "structure": {
+                    "type": "object",
+                    "properties": {
+                        "methods": {
+                            "type": "integer"
+                        },
+                        "operations": {
+                            "type": "integer"
+                        },
+                        "paths": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        },
         "models.MongoDocument": {
             "type": "object",
             "properties": {
                 "api": {
                     "$ref": "#/definitions/models.Api"
                 },
+                "date": {
+                    "type": "string"
+                },
+                "length": {
+                    "type": "integer"
+                },
+                "metrics": {
+                    "$ref": "#/definitions/models.Metrics"
+                },
                 "mongo-id": {
                     "type": "string"
+                },
+                "score": {
+                    "type": "number"
                 },
                 "specification": {
                     "$ref": "#/definitions/models.Specification"

@@ -127,7 +127,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 		err := ctx.BindJSON(&body)
 
 		if err != nil {
-			NewHTTPError(ctx, http.StatusBadRequest, "The query has not been correctly formatted")
+			NewHTTPError(ctx, http.StatusBadRequest, "The body has not been correctly formatted")
 			return
 		}
 
@@ -135,7 +135,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 			var specification interface{}
 
 			if body.Specifications[index]["api"] == nil {
-				NewHTTPError(ctx, http.StatusBadRequest, "The query has not been correctly formatted")
+				NewHTTPError(ctx, http.StatusBadRequest, "The body has not been correctly formatted")
 				return
 			}
 
@@ -143,7 +143,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 			err = json.Unmarshal(jsonBody, &specification)
 
 			if err != nil {
-				NewHTTPError(ctx, http.StatusBadRequest, "The query has not been correctly formatted")
+				NewHTTPError(ctx, http.StatusBadRequest, "The body has not been correctly formatted")
 				return
 			}
 
@@ -152,7 +152,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 		}
 
 		db := mongoClient.Database("apis")
-		documentIDs, err := mongodb.InsertDocuments(db, specificationJSONs, "test")
+		documentIDs, err := mongodb.InsertDocuments(db, specificationJSONs, "specifications")
 
 		if err != nil {
 			NewHTTPError(ctx, http.StatusInternalServerError, err.Error())

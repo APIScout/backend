@@ -27,7 +27,7 @@ import (
 //	@Accept			json
 //	@Produce		json
 //	@Param			page		query		int						false	"page number"		minimum(1)	default(1)
-//	@Param			pageSize	query		int						false	"size of the page"	minimum(1)	maximum(100)	default(10)
+//	@Param			size		query		int						false	"size of the page"	minimum(1)	maximum(100)	default(10)
 //	@Param			k			query		int						false	"knn's k"			minimum(1)	maximum(100)	default(100)
 //	@Param			fragment	body		models.EmbeddingRequest	true	"search query"
 //	@Success		200			{object}	[]models.SpecificationWithApi
@@ -139,7 +139,7 @@ func GetEmbedding(ctx *gin.Context) {
 	err := ctx.BindJSON(&res)
 
 	if err != nil {
-		NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
+		NewHTTPError(ctx, http.StatusBadRequest, "The query has not been correctly formatted")
 		return
 	}
 

@@ -17,12 +17,12 @@ func SetupRoutes(router *gin.Engine, config *models.Config) {
 	// Create routes
 	v1 := router.Group("/api/v1")
 	{
-		v1.GET("/search", SearchHandler(mongoClient, elasticClient))
+		v1.POST("/search", SearchHandler(mongoClient, elasticClient))
 		v1.POST("/preprocess", GetEmbedding)
 		spec := v1.Group("/specification")
 		{
 			spec.POST("/", PostSpecificationHandler(mongoClient, elasticClient))
-			spec.GET("/:id", GetSpecificationHandler(mongoClient, elasticClient))
+			spec.POST("/:id", GetSpecificationHandler(mongoClient, elasticClient))
 			spec.PUT("/sync", SyncSpecificationsHandler(mongoClient, elasticClient))
 		}
 	}

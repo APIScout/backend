@@ -153,10 +153,10 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 						continue
 					}
 				} else {
-					log.Print("No embedding was produced, skipping")
+					log.Print("No embedding was produced, skipping...")
 				}
 			} else {
-				log.Printf("Already exists, skipping")
+				log.Printf("Already exists, skipping...")
 			}
 
 			stop := time.Now().UnixNano()
