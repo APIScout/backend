@@ -189,7 +189,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 			request.MongoDocument.MongoId = mongoId
 			request.Embedding = embeddingVal
 
-			err = elastic.InsertDocument(elasticClient, request, "test")
+			err = elastic.InsertDocument(elasticClient, request, "apis")
 
 			if err != nil {
 				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
