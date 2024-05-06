@@ -27,7 +27,7 @@ func PreprocessFragment(fragments []string, isQuery bool) []string {
 // strings, one for each fragment. An array of fragments needs to be passed to the function.
 func ExtractTags(fragments []string) []string {
 	var nlFragments []string
-	nlTagsRegex := regexp.MustCompile(`['"](?:description|name|title|summary)['"]:\s(?:"([^"]+)"|'([^']+)')`)
+	nlTagsRegex := regexp.MustCompile(`['"](?:description|name|title|summary)['"]:\s?(?:"([^"]+)"|'([^']+)')`)
 	urlsRegex := regexp.MustCompile(`https?://(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&/=]*)`)
 
 	for _, fragment := range fragments {

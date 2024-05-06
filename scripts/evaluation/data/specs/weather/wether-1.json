@@ -1,0 +1,187 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Random Country Meteorological Service API",
+    "description": "API for accessing daily weather forecasts and current weather conditions for a random country",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://random-country-meteorological-service.com/api/v1"
+    }
+  ],
+  "paths": {
+    "/forecast/{country_code}": {
+      "parameters": [
+        {
+          "name": "country_code",
+          "in": "path",
+          "required": true,
+          "description": "ISO 3166-1 alpha-2 country code (e.g., US for United States)",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get daily weather forecast for a specific country",
+        "description": "Returns daily weather forecast for the specified country.",
+        "responses": {
+          "200": {
+            "description": "Successful response with daily weather forecast",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "country": {
+                      "type": "string",
+                      "description": "Name of the country"
+                    },
+                    "forecasts": {
+                      "type": "array",
+                      "description": "List of daily weather forecasts",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "Date of the forecast"
+                          },
+                          "temperature": {
+                            "type": "object",
+                            "description": "Temperature details",
+                            "properties": {
+                              "min": {
+                                "type": "number",
+                                "format": "float",
+                                "description": "Minimum temperature in Celsius"
+                              },
+                              "max": {
+                                "type": "number",
+                                "format": "float",
+                                "description": "Maximum temperature in Celsius"
+                              }
+                            }
+                          },
+                          "weather": {
+                            "type": "string",
+                            "description": "Weather condition for the day"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid country code provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Forecast"
+        ]
+      }
+    },
+    "/current/{country_code}/{city}": {
+      "parameters": [
+        {
+          "name": "country_code",
+          "in": "path",
+          "required": true,
+          "description": "ISO 3166-1 alpha-2 country code (e.g., US for United States)",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "city",
+          "in": "path",
+          "required": true,
+          "description": "Name of the city",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get current weather conditions for a specific city",
+        "description": "Returns current weather conditions for the specified city within the country.",
+        "responses": {
+          "200": {
+            "description": "Successful response with current weather conditions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "country": {
+                      "type": "string",
+                      "description": "Name of the country"
+                    },
+                    "city": {
+                      "type": "string",
+                      "description": "Name of the city"
+                    },
+                    "temperature": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Current temperature in Celsius"
+                    },
+                    "weather": {
+                      "type": "string",
+                      "description": "Current weather condition"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid country code or city provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Current Weather"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Forecast"
+    },
+    {
+      "name": "Current Weather"
+    }
+  ]
+}
