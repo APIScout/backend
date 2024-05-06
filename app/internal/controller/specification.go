@@ -121,6 +121,7 @@ func GetSpecificationHandler(mongoClient *mongo.Client, elasticClient *elasticse
 func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Client) gin.HandlerFunc {
 	fn := func(ctx *gin.Context) {
 		var body models.SpecificationsRequest
+		var mongoIds []string
 		var specifications []string
 		var specificationJSONs []interface{}
 
@@ -183,7 +184,9 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 				return
 			}
 
-			request.MongoDocument.MongoId = documentIDs.InsertedIDs[index].(primitive.ObjectID).Hex()
+			mongoId := documentIDs.InsertedIDs[index].(primitive.ObjectID).Hex()
+			mongoIds = append(mongoIds, mongoId)
+			request.MongoDocument.MongoId = mongoId
 			request.Embedding = embeddingVal
 
 			err = elastic.InsertDocument(elasticClient, request, "test")
@@ -193,6 +196,8 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 				return
 			}
 		}
+
+		ctx.JSON(200, struct{ids []string}{ids: mongoIds})
 	}
 
 	return fn
