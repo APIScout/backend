@@ -1,0 +1,207 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Naval Weather Forecast Service API",
+    "description": "API for accessing weather forecasts for naval conditions",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://naval-weather-forecast-service.com/api/v1"
+    }
+  ],
+  "paths": {
+    "/forecast/naval": {
+      "get": {
+        "summary": "Get naval weather forecast",
+        "description": "Returns weather forecast specifically tailored for naval operations.",
+        "responses": {
+          "200": {
+            "description": "Successful response with naval weather forecast",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "date": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Date of the forecast"
+                    },
+                    "wind_speed": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Wind speed in knots"
+                    },
+                    "wave_height": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Significant wave height in meters"
+                    },
+                    "swell_height": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Swell height in meters"
+                    },
+                    "swell_direction": {
+                      "type": "string",
+                      "description": "Direction of the swell"
+                    },
+                    "visibility": {
+                      "type": "string",
+                      "description": "Visibility conditions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Naval Forecast"
+        ]
+      }
+    },
+    "/forecast/maritime": {
+      "get": {
+        "summary": "Get maritime weather forecast",
+        "description": "Returns weather forecast specifically tailored for maritime operations.",
+        "responses": {
+          "200": {
+            "description": "Successful response with maritime weather forecast",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "date": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Date of the forecast"
+                    },
+                    "wind_speed": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Wind speed in knots"
+                    },
+                    "wave_height": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Significant wave height in meters"
+                    },
+                    "visibility": {
+                      "type": "string",
+                      "description": "Visibility conditions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Maritime Forecast"
+        ]
+      }
+    },
+    "/forecast/navy": {
+      "get": {
+        "summary": "Get navy weather forecast",
+        "description": "Returns weather forecast specifically tailored for navy operations.",
+        "responses": {
+          "200": {
+            "description": "Successful response with navy weather forecast",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "date": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Date of the forecast"
+                    },
+                    "wind_speed": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Wind speed in knots"
+                    },
+                    "wave_height": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Significant wave height in meters"
+                    },
+                    "swell_height": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Swell height in meters"
+                    },
+                    "swell_direction": {
+                      "type": "string",
+                      "description": "Direction of the swell"
+                    },
+                    "visibility": {
+                      "type": "string",
+                      "description": "Visibility conditions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Navy Forecast"
+        ]
+      }
+    }
+  }
+}
