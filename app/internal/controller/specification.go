@@ -8,8 +8,6 @@ import (
 	"backend/app/internal/embedding"
 	"backend/app/internal/models"
 	"backend/app/internal/mongodb"
-	"backend/app/internal/retrieval"
-
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/gin-gonic/gin"
 	"github.com/goccy/go-json"
@@ -32,20 +30,13 @@ import (
 //	@Router			/specification/{id} [get]
 func GetSpecificationHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Client) gin.HandlerFunc {
 	fn := func(ctx *gin.Context) {
-		var body models.EmbeddingRequest
+		//var body models.EmbeddingRequest
 		id := ctx.Param("id")
 		db := mongoClient.Database("apis")
 		objId, err := primitive.ObjectIDFromHex(id)
 
 		if err != nil {
 			NewHTTPError(ctx, http.StatusBadRequest, "The id has not been correctly formatted")
-			return
-		}
-
-		err = ctx.BindJSON(&body)
-
-		if err != nil {
-			NewHTTPError(ctx, http.StatusBadRequest, "The query has not been correctly formatted")
 			return
 		}
 
@@ -88,15 +79,6 @@ func GetSpecificationHandler(mongoClient *mongo.Client, elasticClient *elasticse
 		if err != nil {
 			NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
 			return
-		}
-
-		if len(body.Fields) > 0 {
-			specObj, err = retrieval.FilterFields(specObj, body.Fields)
-
-			if err != nil {
-				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
-				return
-			}
 		}
 
 		// Return the JSON representation of the document
@@ -161,7 +143,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 		}
 
 		var embeddings *models.EmbeddingResponse
-		embeddings, _, err = embedding.PerformPipeline(specifications, false)
+		embeddings, length, err := embedding.PerformPipeline(specifications, false)
 
 		if err != nil {
 			NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
@@ -184,9 +166,26 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 				return
 			}
 
-			mongoId := documentIDs.InsertedIDs[index].(primitive.ObjectID).Hex()
-			mongoIds = append(mongoIds, mongoId)
-			request.MongoDocument.MongoId = mongoId
+			var mongoRes models.MongoResponse
+			mongoId := documentIDs.InsertedIDs[index].(primitive.ObjectID)
+			mongoIds = append(mongoIds, mongoId.Hex())
+
+			document, err := mongodb.RetrieveDocument(mongoClient.Database("apis"), bson.M{"_id": mongoId}, "specifications")
+
+			if err != nil {
+				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
+				return
+			}
+
+			err = bson.Unmarshal(document, &mongoRes)
+
+			if err != nil {
+				NewHTTPError(ctx, http.StatusInternalServerError, err.Error())
+				return
+			}
+
+			request.MongoDocument = *mongoRes.InitObject()
+			request.MongoDocument.Length = length[index]
 			request.Embedding = embeddingVal
 
 			err = elastic.InsertDocument(elasticClient, request, "apis")

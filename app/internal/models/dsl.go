@@ -117,17 +117,28 @@ func (filter *Filter) Validate() error {
 
 func (filter *Filter) ToEsFilter() (string, bool) {
 	var esFilter strings.Builder
+	rhs := filter.Rhs
 	esOperator := OperatorToEsMap[filter.Operator]
 	positive := !slices.Contains(NegOperators, filter.Operator)
 
 	switch esOperator {
 	case "term":
-		esFilter.WriteString(`"term": {"metadata.` + filter.Lhs + `": "` + filter.Rhs + `"}`)
+		if TypesMap[filter.Lhs] != "boolean" && TypesMap[filter.Lhs] != "int" {
+			rhs = `"` + rhs + `"`
+		}
+
+		if strings.Compare(filter.Rhs, "true") == 0 {
+			esFilter.WriteString(`"term": {"metadata.` + filter.Lhs + `": true}`)
+			break
+		} else if strings.Compare(filter.Rhs, "false") == 0 {
+			esFilter.WriteString(`"term": {"metadata.` + filter.Lhs + `": false}`)
+			break
+		}
+
+		esFilter.WriteString(`"term": {"metadata.` + filter.Lhs + `": ` + rhs + `}`)
 	case "regexp":
 		esFilter.WriteString(`"regexp": {"metadata.` + filter.Lhs + `": ".*` + filter.Rhs + `.*"}`)
 	case "gte", "lte", "gt", "lt":
-		rhs := filter.Rhs
-
 		if TypesMap[filter.Lhs] == "version" || TypesMap[filter.Lhs] == "date" {
 			rhs = `"` + rhs + `"`
 		}

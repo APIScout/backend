@@ -118,7 +118,7 @@ func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elastic
 				if len(embeddings.Predictions) != 0 {
 					var esDocument models.EsRequest
 					esDocument.MongoDocument = *mongoDocument
-					esDocument.MongoDocument.Length = length
+					esDocument.MongoDocument.Length = length[0]
 					esDocument.Embedding = embeddings.Predictions[0]
 
 					id, err := primitive.ObjectIDFromHex(mongoDocument.MongoId)
