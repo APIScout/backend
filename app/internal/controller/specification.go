@@ -196,7 +196,7 @@ func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elastics
 			}
 		}
 
-		ctx.JSON(200, struct{ids []string}{ids: mongoIds})
+		ctx.Status(200)
 	}
 
 	return fn

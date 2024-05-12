@@ -1,0 +1,506 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "eBook Store API",
+    "version": "1.0.0",
+    "description": "API for managing eBooks, authors, publishers, and user authentication"
+  },
+  "servers": [
+    {
+      "url": "https://api.ebookstore.com/v1"
+    }
+  ],
+  "paths": {
+    "/ebooks": {
+      "get": {
+        "summary": "Get a list of eBooks",
+        "responses": {
+          "200": {
+            "description": "List of eBooks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Ebook"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new eBook",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewEbook"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "eBook added successfully"
+          }
+        }
+      }
+    },
+    "/ebooks/{ebookId}": {
+      "get": {
+        "summary": "Get details of a specific eBook",
+        "parameters": [
+          {
+            "name": "ebookId",
+            "in": "path",
+            "description": "ID of the eBook",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "eBook details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ebook"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing eBook",
+        "parameters": [
+          {
+            "name": "ebookId",
+            "in": "path",
+            "description": "ID of the eBook",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EbookUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "eBook updated successfully"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an eBook",
+        "parameters": [
+          {
+            "name": "ebookId",
+            "in": "path",
+            "description": "ID of the eBook",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "eBook deleted successfully"
+          }
+        }
+      }
+    },
+    "/authors": {
+      "get": {
+        "summary": "Get a list of authors",
+        "responses": {
+          "200": {
+            "description": "List of authors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Author"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new author",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewAuthor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Author added successfully"
+          }
+        }
+      }
+    },
+    "/authors/{authorId}": {
+      "get": {
+        "summary": "Get details of a specific author",
+        "parameters": [
+          {
+            "name": "authorId",
+            "in": "path",
+            "description": "ID of the author",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Author details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Author"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing author",
+        "parameters": [
+          {
+            "name": "authorId",
+            "in": "path",
+            "description": "ID of the author",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Author updated successfully"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an author",
+        "parameters": [
+          {
+            "name": "authorId",
+            "in": "path",
+            "description": "ID of the author",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Author deleted successfully"
+          }
+        }
+      }
+    },
+    "/publishers": {
+      "get": {
+        "summary": "Get a list of publishers",
+        "responses": {
+          "200": {
+            "description": "List of publishers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Publisher"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new publisher",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPublisher"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Publisher added successfully"
+          }
+        }
+      }
+    },
+    "/publishers/{publisherId}": {
+      "get": {
+        "summary": "Get details of a specific publisher",
+        "parameters": [
+          {
+            "name": "publisherId",
+            "in": "path",
+            "description": "ID of the publisher",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Publisher details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Publisher"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing publisher",
+        "parameters": [
+          {
+            "name": "publisherId",
+            "in": "path",
+            "description": "ID of the publisher",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublisherUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Publisher updated successfully"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a publisher",
+        "parameters": [
+          {
+            "name": "publisherId",
+            "in": "path",
+            "description": "ID of the publisher",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Publisher deleted successfully"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "Authenticate user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLogin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Ebook": {
+        "type": "object",
+        "properties": {
+          "ebookId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "published_year": {
+            "type": "integer"
+          },
+          "price": {
+            "type": "number"
+          }
+        }
+      },
+      "NewEbook": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "published_year": {
+            "type": "integer"
+          },
+          "price": {
+            "type": "number"
+          }
+        }
+      },
+      "EbookUpdate": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "published_year": {
+            "type": "integer"
+          },
+          "price": {
+            "type": "number"
+          }
+        }
+      },
+      "Author": {
+        "type": "object",
+        "properties": {
+          "authorId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "NewAuthor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "AuthorUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Publisher": {
+        "type": "object",
+        "properties": {
+          "publisherId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "NewPublisher": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "PublisherUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "UserLogin": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

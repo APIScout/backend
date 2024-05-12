@@ -1,0 +1,227 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "NFL News API",
+    "description": "API for accessing the american NFL news articles",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://nfl-news-api.com/api/v1"
+    }
+  ],
+  "paths": {
+    "/articles": {
+      "get": {
+        "summary": "Get NFL news articles",
+        "description": "Returns a list of NFL news articles.",
+        "responses": {
+          "200": {
+            "description": "Successful response with NFL news articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Article ID"
+                      },
+                      "title": {
+                        "type": "string",
+                        "description": "Article title"
+                      },
+                      "author": {
+                        "type": "string",
+                        "description": "Author of the article"
+                      },
+                      "content": {
+                        "type": "string",
+                        "description": "Article content"
+                      },
+                      "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date and time when the article was published"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Articles"
+        ]
+      }
+    },
+    "/articles/{id}": {
+      "get": {
+        "summary": "Get specific NFL news article",
+        "description": "Returns details of a specific NFL news article.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Article ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with NFL news article",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Article ID"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "Article title"
+                    },
+                    "author": {
+                      "type": "string",
+                      "description": "Author of the article"
+                    },
+                    "content": {
+                      "type": "string",
+                      "description": "Article content"
+                    },
+                    "published_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Date and time when the article was published"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Articles"
+        ]
+      }
+    },
+    "/articles/{id}/comments": {
+      "get": {
+        "summary": "Get comments for an article",
+        "description": "Returns comments for a specific NFL news article.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Article ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with comments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Comment ID"
+                      },
+                      "author": {
+                        "type": "string",
+                        "description": "Author of the comment"
+                      },
+                      "content": {
+                        "type": "string",
+                        "description": "Comment content"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date and time when the comment was created"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Comments"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Articles"
+    },
+    {
+      "name": "Comments"
+    }
+  ]
+}

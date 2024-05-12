@@ -1,0 +1,321 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Forky API",
+    "description": "An API for booking tables at different restaurants",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.restaurantbooking.com/v1"
+    }
+  ],
+  "paths": {
+    "/restaurants": {
+      "get": {
+        "summary": "Get a list of restaurants",
+        "responses": {
+          "200": {
+            "description": "A list of restaurants",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Restaurant"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/restaurants/{restaurantId}": {
+      "get": {
+        "summary": "Get details of a restaurant by ID",
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the restaurant",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details of the restaurant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Restaurant"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/restaurants/{restaurantId}/tables": {
+      "get": {
+        "summary": "Get available tables at a restaurant",
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the restaurant",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of available tables",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Table"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/restaurants/{restaurantId}/tables/{tableId}/bookings": {
+      "get": {
+        "summary": "Get bookings for a specific table",
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the restaurant",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tableId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the table",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bookings for the table",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Booking"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookings/{id}": {
+      "get": {
+        "summary": "Get booking by ID",
+        "description": "Returns details of a specific booking",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the booking",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Booking not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update booking by ID",
+        "description": "Allows users to update details of a specific booking",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the booking to update",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {}
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Booking updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Booking not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete booking by ID",
+        "description": "Allows users to delete a specific booking",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the booking to delete",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Booking deleted successfully"
+          },
+          "404": {
+            "description": "Booking not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Restaurant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "Table": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "capacity": {
+            "type": "integer"
+          },
+          "isAvailable": {
+            "type": "boolean"
+          },
+          "restaurantId": {
+            "type": "string"
+          }
+        }
+      },
+      "Booking": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "restaurantId": {
+            "type": "string"
+          },
+          "tableId": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "numberOfGuests": {
+            "type": "integer"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerEmail": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "BookingRequest": {
+        "type": "object",
+        "properties": {
+          "restaurantId": {
+            "type": "string"
+          },
+          "tableId": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "numberOfGuests": {
+            "type": "integer"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerEmail": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      }
+    }
+  }
+}

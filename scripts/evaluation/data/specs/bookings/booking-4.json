@@ -1,0 +1,161 @@
+{
+  "info": {
+    "title": "Online Booking API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/bookings": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "date": {
+                    "description": "Appointment date.",
+                    "format": "date",
+                    "type": "string"
+                  },
+                  "customer": {
+                    "properties": {
+                      "email": {
+                        "description": "Customer email address.",
+                        "format": "email",
+                        "type": "string"
+                      },
+                      "name": {
+                        "description": "Customer name.",
+                        "type": "string"
+                      },
+                      "phone_number": {
+                        "description": "Customer phone number.",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "service_id": {
+                    "description": "ID of the restaurant to be booked.",
+                    "type": "integer"
+                  },
+                  "time": {
+                    "format": "time",
+                    "type": "string",
+                    "description": "Booking time."
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "Unique appointment ID.",
+                      "type": "integer"
+                    },
+                    "message": {
+                      "description": "Confirmation message.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Booking created successfully."
+          }
+        },
+        "summary": "Create a new booking."
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "date": {
+                        "description": "Booking date.",
+                        "format": "date",
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "Unique appointment ID.",
+                        "type": "integer"
+                      },
+                      "restaurant": {
+                        "properties": {
+                          "duration": {
+                            "description": "Restaurant duration in minutes.",
+                            "type": "integer"
+                          },
+                          "id": {
+                            "description": "Restaurant ID.",
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "Restaurant name.",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "service_provider": {
+                        "properties": {
+                          "name": {
+                            "description": "Restaurant name.",
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "Restaurant ID.",
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "time": {
+                        "format": "time",
+                        "type": "string",
+                        "description": "Appointment time."
+                      }
+                    }
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "List of available booking."
+          }
+        },
+        "summary": "Retrieve available booking for a specific date and a specific restaurant.",
+        "parameters": [
+          {
+            "description": "Date for booking (YYYY-MM-DD format).",
+            "in": "query",
+            "name": "date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "ID of the specific restaurant.",
+            "in": "query",
+            "name": "restaurant_id"
+          }
+        ]
+      }
+    }
+  }
+}
