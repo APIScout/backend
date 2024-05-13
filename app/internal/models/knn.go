@@ -4,5 +4,5 @@ package models
 var ParametersMap = map[string][]int{
 	"size": {10, 1, 100},
 	"page": {1, 1, -1},
-	"k":    {100, 1, 100},
+	"k":    {100, 1, 120},
 }
