@@ -1,0 +1,356 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Restaurant API - OpenAPI 3.0",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://127.0.0.1:8000/api"
+    }
+  ],
+  "paths": {
+    "/orders": {
+      "post": {
+        "summary": "Create an order.",
+        "requestBody": {
+          "description": "Create an order on provided restaurant point with provided order ID",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "order_id": {
+                    "type": "integer"
+                  },
+                  "point_id": {
+                    "type": "integer"
+                  },
+                  "data": {
+                    "type": "object"
+                  }
+                },
+                "example": {
+                  "order_id": {
+                    "$numberInt": "1"
+                  },
+                  "point_id": {
+                    "$numberInt": "1"
+                  },
+                  "data": {
+                    "burger": {
+                      "$numberInt": "1"
+                    },
+                    "hotdog": {
+                      "$numberInt": "2"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Order is already created"
+          },
+          "201": {
+            "description": "Order created"
+          },
+          "400": {
+            "description": "Order data is incorrect or printers are missing on the provided point"
+          },
+          "405": {
+            "description": "Method not allowed"
+          }
+        }
+      }
+    },
+    "/points/{point_id}/kitchen-print": {
+      "post": {
+        "summary": "Print rendered kitchen checks on provided point",
+        "parameters": [
+          {
+            "name": "point_id",
+            "in": "path",
+            "description": "Restaurant point ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "There are no unprinted checks"
+          },
+          "201": {
+            "description": "Checks are printed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "example": [
+                    "/media/pdf/12345_kitchen",
+                    "/media/pdf/54321_kitchen"
+                  ]
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          }
+        }
+      }
+    },
+    "/points/{point_id}/client-print": {
+      "post": {
+        "summary": "Print rendered client checks on provided point with provided order ID",
+        "parameters": [
+          {
+            "name": "point_id",
+            "in": "path",
+            "description": "Restaurant point ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Provide order ID",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "example": {
+                  "$numberInt": "12345"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "There is no unprinted check with provided order id"
+          },
+          "201": {
+            "description": "Check is printed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "/media/pdf/12345_kitchen"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          }
+        }
+      }
+    },
+    "/table-booking": {
+      "post": {
+        "summary": "Create a table booking.",
+        "requestBody": {
+          "description": "Create a table booking for a specific restaurant point.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "point_id": {
+                    "type": "integer"
+                  },
+                  "booking_time": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "party_size": {
+                    "type": "integer"
+                  },
+                  "customer_name": {
+                    "type": "string"
+                  },
+                  "contact_number": {
+                    "type": "string"
+                  }
+                },
+                "required": ["point_id", "booking_time", "party_size", "customer_name", "contact_number"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Table booking created successfully."
+          },
+          "400": {
+            "description": "Invalid data provided for table booking."
+          },
+          "405": {
+            "description": "Method not allowed"
+          }
+        }
+      }
+    },
+    "/table-booking/{booking_id}": {
+      "get": {
+        "summary": "Get details of a table booking.",
+        "parameters": [
+          {
+            "name": "booking_id",
+            "in": "path",
+            "description": "ID of the table booking",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Table booking details retrieved successfully."
+          },
+          "404": {
+            "description": "Table booking not found."
+          },
+          "405": {
+            "description": "Method not allowed"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Cancel a table booking.",
+        "parameters": [
+          {
+            "name": "booking_id",
+            "in": "path",
+            "description": "ID of the table booking",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Table booking cancelled successfully."
+          },
+          "404": {
+            "description": "Table booking not found."
+          },
+          "405": {
+            "description": "Method not allowed"
+          }
+        }
+      }
+    },
+    "/seat-booking": {
+      "post": {
+        "summary": "Create a table booking.",
+        "requestBody": {
+          "description": "Create a table booking for a specific restaurant point.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "point_id": {
+                    "type": "integer"
+                  },
+                  "booking_time": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "party_size": {
+                    "type": "integer"
+                  },
+                  "customer_name": {
+                    "type": "string"
+                  },
+                  "contact_number": {
+                    "type": "string"
+                  }
+                },
+                "required": ["point_id", "booking_time", "party_size", "customer_name", "contact_number"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Table booking created successfully."
+          },
+          "400": {
+            "description": "Invalid data provided for table booking."
+          },
+          "405": {
+            "description": "Method not allowed"
+          }
+        }
+      }
+    },
+    "/seat-booking/{booking_id}": {
+      "get": {
+        "summary": "Get details of a seat booking.",
+        "parameters": [
+          {
+            "name": "booking_id",
+            "in": "path",
+            "description": "ID of the seat booking",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Table booking details retrieved successfully."
+          },
+          "404": {
+            "description": "Table booking not found."
+          },
+          "405": {
+            "description": "Method not allowed"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Cancel a seat booking.",
+        "parameters": [
+          {
+            "name": "booking_id",
+            "in": "path",
+            "description": "ID of the seat booking",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Seat booking cancelled successfully."
+          },
+          "404": {
+            "description": "Seat booking not found."
+          },
+          "405": {
+            "description": "Method not allowed"
+          }
+        }
+      }
+    }
+  }
+}

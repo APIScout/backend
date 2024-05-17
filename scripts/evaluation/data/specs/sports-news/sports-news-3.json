@@ -1,0 +1,553 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sports News Service API",
+    "description": "An API for accessing news articles across various sports leagues including NFL, NBA, WNBA, NASCAR, etc.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.sportsnews.com"
+    }
+  ],
+  "paths": {
+    "/news": {
+      "get": {
+        "summary": "Get sports news articles",
+        "description": "Retrieve the latest news articles across all sports leagues.",
+        "responses": {
+          "200": {
+            "description": "A list of sports news articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SportsNewsArticle"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new sports news article",
+        "description": "Submit a new news article about any sports league.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsNewsArticleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The news article has been created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportsNewsArticle"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/news/{id}": {
+      "get": {
+        "summary": "Get a specific sports news article",
+        "description": "Retrieve a specific news article by its ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the news article",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested sports news article",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportsNewsArticle"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing sports news article",
+        "description": "Update the content of an existing news article.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the news article",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsNewsArticleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The news article has been updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportsNewsArticle"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an existing sports news article",
+        "description": "Delete an existing news article by its ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the news article",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The news article has been deleted successfully"
+          }
+        }
+      }
+    },
+    "/nfl/news": {
+      "post": {
+        "summary": "Create a new NFL news article",
+        "description": "Submit a new news article about the NFL.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsNewsArticleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The news article has been created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportsNewsArticle"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nfl/news/{id}": {
+      "put": {
+        "summary": "Update an existing NFL news article",
+        "description": "Update the content of an existing NFL news article.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the news article",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsNewsArticleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The news article has been updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportsNewsArticle"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an existing NFL news article",
+        "description": "Delete an existing NFL news article by its ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the news article",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The news article has been deleted successfully"
+          }
+        }
+      }
+    },
+    "/nba/news": {
+      "post": {
+        "summary": "Create a new NBA news article",
+        "description": "Submit a new news article about the NBA.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsNewsArticleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The news article has been created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportsNewsArticle"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nba/news/{id}": {
+      "put": {
+        "summary": "Update an existing NBA news article",
+        "description": "Update the content of an existing NBA news article.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the news article",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsNewsArticleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The news article has been updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportsNewsArticle"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an existing NBA news article",
+        "description": "Delete an existing NBA news article by its ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the news article",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The news article has been deleted successfully"
+          }
+        }
+      }
+    },
+    "/wnba/news": {
+      "post": {
+        "summary": "Create a new WNBA news article",
+        "description": "Submit a new news article about the WNBA.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsNewsArticleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The news article has been created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportsNewsArticle"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/wnba/news/{id}": {
+      "put": {
+        "summary": "Update an existing WNBA news article",
+        "description": "Update the content of an existing WNBA news article.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the news article",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsNewsArticleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The news article has been updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportsNewsArticle"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an existing WNBA news article",
+        "description": "Delete an existing WNBA news article by its ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the news article",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The news article has been deleted successfully"
+          }
+        }
+      }
+    },
+    "/nascar/news": {
+      "post": {
+        "summary": "Create a new NASCAR news article",
+        "description": "Submit a new news article about NASCAR.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsNewsArticleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The news article has been created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportsNewsArticle"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nascar/news/{id}": {
+      "put": {
+        "summary": "Update an existing NASCAR news article",
+        "description": "Update the content of an existing NASCAR news article.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the news article",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsNewsArticleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The news article has been updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportsNewsArticle"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an existing NASCAR news article",
+        "description": "Delete an existing NASCAR news article by its ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the news article",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The news article has been deleted successfully"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SportsNewsArticle": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the news article."
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the news article."
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the news article."
+          },
+          "author": {
+            "type": "string",
+            "description": "The author of the news article."
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the news article was published."
+          },
+          "sport": {
+            "type": "string",
+            "description": "The sports league the news article belongs to."
+          }
+        }
+      },
+      "SportsNewsArticleInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the news article."
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the news article."
+          },
+          "author": {
+            "type": "string",
+            "description": "The author of the news article."
+          },
+          "sport": {
+            "type": "string",
+            "description": "The sports league the news article belongs to."
+          }
+        },
+        "required": ["title", "content", "sport"]
+      }
+    }
+  }
+}

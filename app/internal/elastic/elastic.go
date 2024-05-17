@@ -1,11 +1,9 @@
 package elastic
 
 import (
+	"backend/app/internal/models"
 	"fmt"
 	"log"
-
-	"backend/app/internal/helpers"
-	"backend/app/internal/models"
 
 	"github.com/elastic/go-elasticsearch/v8"
 )
@@ -19,7 +17,6 @@ func Connect(config models.ElasticConfig) *elasticsearch.Client {
 		},
 		Username: config.User,
 		Password: config.Password,
-		CACert:   helpers.GetCertificate(),
 	}
 
 	client, err := elasticsearch.NewClient(esConfig)
@@ -27,6 +24,7 @@ func Connect(config models.ElasticConfig) *elasticsearch.Client {
 	if err != nil {
 		panic(err)
 	}
+
 	log.Print("Connected to ElasticSearch")
 
 	return client

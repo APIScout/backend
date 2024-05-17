@@ -1,0 +1,341 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Your Personal Bookshelf",
+    "description": "An API for managing a digital library with endpoints for different book categories",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/api/v1",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/books/{category}": {
+      "get": {
+        "summary": "Get books by category",
+        "description": "Returns a list of books belonging to a specified category.",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "description": "The category of books to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of books belonging to the specified category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Book"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books": {
+      "get": {
+        "summary": "Get all books",
+        "description": "Returns a list of all books available in the library.",
+        "responses": {
+          "200": {
+            "description": "A list of all books available in the library",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Book"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books/{id}": {
+      "get": {
+        "summary": "Get book by ID",
+        "description": "Returns detailed information about a book based on its unique ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the book to retrieve",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detailed information about the requested book",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookmarks": {
+      "get": {
+        "summary": "List all bookmarks",
+        "description": "Returns a list of all bookmarks saved for books in the library.",
+        "responses": {
+          "200": {
+            "description": "A list of all bookmarks saved for books in the library",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Bookmark"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Save bookmark for a book",
+        "description": "Creates a bookmark for a specific book.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookmarkInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Bookmark created successfully"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modify bookmark",
+        "description": "Modifies an existing bookmark.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookmarkInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bookmark modified successfully"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete bookmark",
+        "description": "Deletes a bookmark for a specific book.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The ID of the bookmark to delete",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Bookmark deleted successfully"
+          }
+        }
+      }
+    },
+    "/notes": {
+      "get": {
+        "summary": "List all notes",
+        "description": "Returns a list of all notes saved for books in the library.",
+        "responses": {
+          "200": {
+            "description": "A list of all notes saved for books in the library",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Notes"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Save notes for a book",
+        "description": "Creates notes for a specific book.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotesInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Notes created successfully"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modify notes",
+        "description": "Modifies existing notes.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotesInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Notes modified successfully"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete notes",
+        "description": "Deletes notes for a specific book.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The ID of the notes to delete",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Notes deleted successfully"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Book": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The unique identifier of the book"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the book"
+          },
+          "author": {
+            "type": "string",
+            "description": "The author of the book"
+          },
+          "category": {
+            "type": "string",
+            "description": "The category of the book"
+          }
+        }
+      },
+      "Bookmark": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The unique identifier of the bookmark"
+          },
+          "bookId": {
+            "type": "integer",
+            "description": "The ID of the book for which the bookmark is saved"
+          },
+          "page": {
+            "type": "integer",
+            "description": "The page number of the bookmark"
+          }
+        }
+      },
+      "Notes": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The unique identifier of the notes"
+          },
+          "bookId": {
+            "type": "integer",
+            "description": "The ID of the book for which the notes are saved"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the notes"
+          }
+        }
+      },
+      "BookmarkInput": {
+        "type": "object",
+        "properties": {
+          "bookId": {
+            "type": "integer",
+            "description": "The ID of the book for which the bookmark is being saved"
+          },
+          "page": {
+            "type": "integer",
+            "description": "The page number of the bookmark"
+          }
+        }
+      },
+      "NotesInput": {
+        "type": "object",
+        "properties": {
+          "bookId": {
+            "type": "integer",
+            "description": "The ID of the book for which the notes are being saved"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the notes"
+          }
+        }
+      }
+    }
+  }
+}

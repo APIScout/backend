@@ -24,6 +24,7 @@ func CreateEsFilter(filters []models.Filter) *string {
 	var esFilter strings.Builder
 	esFilter.WriteString(`"bool": {`)
 
+	filterSource := false
 	filterCommits := false
 	filterLength := false
 
@@ -48,13 +49,9 @@ func CreateEsFilter(filters []models.Filter) *string {
 			mustNot.WriteString(query)
 		}
 
-		if strings.Compare(filter.Lhs, "api.id") == 0 || strings.Compare(filter.Lhs, "api.latest") == 0 {
-			filterCommits = true
-		}
-
-		if strings.Compare(filter.Lhs, "length") == 0 {
-			filterLength = true
-		}
+		filterSource = filter.Lhs == "api.source"
+		filterCommits = filter.Lhs == "api.id" || filter.Lhs == "api.latest"
+		filterLength = filter.Lhs == "length"
 	}
 
 	esFilter.WriteString(`"must": [` + must.String())
@@ -69,6 +66,10 @@ func CreateEsFilter(filters []models.Filter) *string {
 
 	if !filterLength {
 		esFilter.WriteString(`{"nested": {"path": "metadata", "query": {"range": {"metadata.length": {"gte": 500}}}}}, `)
+	}
+
+	if !filterSource {
+		esFilter.WriteString(`{"nested": {"path": "metadata.api", "query": {"regexp": {"metadata.api.source": ".+"}}}}, `)
 	}
 
 	esFilter.WriteString(`{"nested": {"path": "metadata.api", "query": {"regexp": {"metadata.api.name": ".+"}}}}], `)
