@@ -1,5 +1,4 @@
-# API Scout - BackendConfig
-
+# API Scout
 ## Configure
 
 ### Set ENV Variables
