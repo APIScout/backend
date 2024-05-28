@@ -1,0 +1,3 @@
+pagefind
+out ./docs
+home backend/app/internal/

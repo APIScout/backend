@@ -1,0 +1,349 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Digital Library API",
+    "version": "1.0.0",
+    "description": "API for managing digital library resources"
+  },
+  "servers": [
+    {
+      "url": "https://api.examplelibrary.com/v1"
+    }
+  ],
+  "paths": {
+    "/books": {
+      "get": {
+        "summary": "Get a list of books",
+        "responses": {
+          "200": {
+            "description": "List of books",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Book"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new book",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Book added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books/{bookId}": {
+      "get": {
+        "summary": "Get details of a specific book",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "ID of the book",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing book",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "ID of the book",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Book updated successfully"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a book",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "ID of the book",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book deleted successfully"
+          }
+        }
+      }
+    },
+    "/books/{bookId}/borrow": {
+      "post": {
+        "summary": "Borrow a book",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "ID of the book",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book borrowed successfully"
+          }
+        }
+      }
+    },
+    "/books/{bookId}/return": {
+      "post": {
+        "summary": "Return a borrowed book",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "ID of the book",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book returned successfully"
+          }
+        }
+      }
+    },
+    "/authors": {
+      "get": {
+        "summary": "Get a list of authors",
+        "responses": {
+          "200": {
+            "description": "List of authors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Author"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authors/{authorId}/books": {
+      "get": {
+        "summary": "Get books by a specific author",
+        "parameters": [
+          {
+            "name": "authorId",
+            "in": "path",
+            "description": "ID of the author",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of books by the author",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Book"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/publishers": {
+      "get": {
+        "summary": "Get a list of publishers",
+        "responses": {
+          "200": {
+            "description": "List of publishers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Publisher"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/publishers/{publisherId}/books": {
+      "get": {
+        "summary": "Get books by a specific publisher",
+        "parameters": [
+          {
+            "name": "publisherId",
+            "in": "path",
+            "description": "ID of the publisher",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of books by the publisher",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Book"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BookInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "published_year": {
+            "type": "integer"
+          }
+        }
+      },
+      "Book": {
+        "type": "object",
+        "properties": {
+          "bookId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "published_year": {
+            "type": "integer"
+          }
+        }
+      },
+      "Author": {
+        "type": "object",
+        "properties": {
+          "authorId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "books": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Book"
+            }
+          }
+        }
+      },
+      "Publisher": {
+        "type": "object",
+        "properties": {
+          "publisherId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "books": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Book"
+            }
+          }
+        }
+      }
+    }
+  }
+}

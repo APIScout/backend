@@ -1,22 +1,29 @@
-version: "2.2"
 services:
   models:
     image: tensorflow/serving
     container_name: models
-    networks:
-      - be-network
-    volumes:
-      - ./models/universal-encoder:/models/universal-encoder
     environment:
       MODEL_NAME: "universal-encoder"
+    networks:
+      - backend-network
+    volumes:
+      - ./models/universal-encoder:/models/universal-encoder
 
   backend:
-    image: api-scout-backend:latest
+    image: edoriggio/api-scout:dev
     container_name: backend
+    environment:
+      GIN_MODE: "release"
+      MODELS_HOST: "models"
     networks:
-      - be-network
+      - backend-network
     ports:
       - "8080:8080"
+    volumes:
+      - ./config:/backend/config
+      - ./ca.crt:/backend/ca.crt
+
 networks:
-  be-network:
-    driver: bridge
+  backend-network:
+    name: backend-network
+    external: true

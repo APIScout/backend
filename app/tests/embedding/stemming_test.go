@@ -7,7 +7,6 @@ import (
 	"backend/app/internal/embedding"
 )
 
-
 func TestStemmingEmptyString(t *testing.T) {
 	fragments := []string{""}
 	res := embedding.Stemming(fragments)
@@ -17,7 +16,7 @@ func TestStemmingEmptyString(t *testing.T) {
 	}
 }
 
-func TestStemmingEmptyArray(t *testing.T)  {
+func TestStemmingEmptyArray(t *testing.T) {
 	var fragments []string
 	res := embedding.Stemming(fragments)
 
@@ -55,4 +54,3 @@ func TestStemmingIncorrectlyFormattedQueries(t *testing.T) {
 		t.Fatal(res)
 	}
 }
-

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="doc2go">
+    <link href="../_/css/main.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../_/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../_/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="../_/icons/favicon.ico"><link href="../_/pagefind/pagefind-ui.css" rel="stylesheet">
+<script src="../_/pagefind/pagefind-ui.js"></script><title>controller</title>
+</head>
+  <body>
+    <nav>
+        <a href="..">backend/app/internal</a>/controller<span class="navbar-right">
+          <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+      </nav>
+    <div id="search"></div><main
+      data-pagefind-body
+      data-pagefind-filter="Visibility:Internal"><h2 id="pkg-overview" data-pagefind-meta="Import path:backend/app/internal/controller">package controller</h2>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;backend/app/internal/controller&#34;</span></pre>
+<h3 id="pkg-index" data-pagefind-ignore>Index</h3>
+<ul data-pagefind-ignore>
+  <li><a href="#GetSpecificationHandler">func GetSpecificationHandler(mongoClient *mongo.Client) gin.HandlerFunc</a></li>
+  <li><a href="#NewHTTPError">func NewHTTPError(ctx *gin.Context, status int, message string)</a></li>
+  <li><a href="#PostSpecificationHandler">func PostSpecificationHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Client) gin.HandlerFunc</a></li>
+  <li><a href="#Search">func Search(ctx *gin.Context)</a></li>
+  <li><a href="#SetupRoutes">func SetupRoutes(router *gin.Engine, config *models.Config)</a></li>
+  <li><a href="#SyncSpecificationsHandler">func SyncSpecificationsHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Client) gin.HandlerFunc</a></li>
+  </ul><h3 id="pkg-functions" data-pagefind-ignore>Functions</h3>
+  <h3 id="GetSpecificationHandler">func GetSpecificationHandler</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">GetSpecificationHandler</span><span class="p">(</span><span class="nx">mongoClient</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#Client"><span class="nx">Client</span></a><span class="p">)</span> <a href="https://pkg.go.dev/github.com/gin-gonic/gin"><span class="nx">gin</span></a><span class="p">.</span><a href="https://pkg.go.dev/github.com/gin-gonic/gin#HandlerFunc"><span class="nx">HandlerFunc</span></a></pre>
+    <p>GetSpecificationHandler godoc
+<pre>@Summary		Get OpenAPI specification
+@Description	Retrieve a specific OpenAPI specification&apos;s content given a valid ID
+@Tags			specification
+@Accept			json
+@Produce		json
+@Param			id	path		string	true	&quot;Specification ID&quot;
+@Success		200	{object}	models.MongoResponseWithApi
+@Failure		400	{object}	models.HTTPError
+@Failure		500	{object}	models.HTTPError
+@Router			/specification/{id} [get]
+</pre>
+<h3 id="NewHTTPError">func NewHTTPError</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">NewHTTPError</span><span class="p">(</span><span class="nx">ctx</span> <span class="o">*</span><a href="https://pkg.go.dev/github.com/gin-gonic/gin"><span class="nx">gin</span></a><span class="p">.</span><a href="https://pkg.go.dev/github.com/gin-gonic/gin#Context"><span class="nx">Context</span></a><span class="p">,</span> <span class="nx">status</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a><span class="p">,</span> <span class="nx">message</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span></pre>
+    <h3 id="PostSpecificationHandler">func PostSpecificationHandler</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">PostSpecificationHandler</span><span class="p">(</span><span class="nx">mongoClient</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#Client"><span class="nx">Client</span></a><span class="p">,</span> <span class="nx">elasticClient</span> <span class="o">*</span><a href="https://pkg.go.dev/github.com/elastic/go-elasticsearch/v8"><span class="nx">elasticsearch</span></a><span class="p">.</span><a href="https://pkg.go.dev/github.com/elastic/go-elasticsearch/v8#Client"><span class="nx">Client</span></a><span class="p">)</span> <a href="https://pkg.go.dev/github.com/gin-gonic/gin"><span class="nx">gin</span></a><span class="p">.</span><a href="https://pkg.go.dev/github.com/gin-gonic/gin#HandlerFunc"><span class="nx">HandlerFunc</span></a></pre>
+    <p>PostSpecificationHandler godoc
+<pre>@Summary		Insert OpenAPI specifications
+@Description	Insert new OpenAPI specifications in the database.
+@Tags			specification
+@Accept			json
+@Produce		json
+@Param			specifications	body	models.SpecificationsRequest	true	&quot;New Specifications&quot;
+@Success		200
+@Failure		400	{object}	models.HTTPError
+@Failure		500	{object}	models.HTTPError
+@Router			/specification [post]
+</pre>
+<h3 id="Search">func Search</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">Search</span><span class="p">(</span><span class="nx">ctx</span> <span class="o">*</span><a href="https://pkg.go.dev/github.com/gin-gonic/gin"><span class="nx">gin</span></a><span class="p">.</span><a href="https://pkg.go.dev/github.com/gin-gonic/gin#Context"><span class="nx">Context</span></a><span class="p">)</span></pre>
+    <p>Search godoc
+<pre>	@Summary		Search OpenAPI specifications
+	@Description	Retrieve OpenAPI specifications matching the given query
+	@Tags			search
+	@Accept			json
+	@Produce		json
+	@Param			fragment	body		models.EmbeddingRequest	true	&quot;Search query&quot;
+ TODO: Change this
+	@Success		200			{string}	OK
+	@Failure		400			{object}	models.HTTPError
+	@Router			/search [post]
+</pre>
+<h3 id="SetupRoutes">func SetupRoutes</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">SetupRoutes</span><span class="p">(</span><span class="nx">router</span> <span class="o">*</span><a href="https://pkg.go.dev/github.com/gin-gonic/gin"><span class="nx">gin</span></a><span class="p">.</span><a href="https://pkg.go.dev/github.com/gin-gonic/gin#Engine"><span class="nx">Engine</span></a><span class="p">,</span> <span class="nx">config</span> <span class="o">*</span><a href="../models"><span class="nx">models</span></a><span class="p">.</span><a href="../models#Config"><span class="nx">Config</span></a><span class="p">)</span></pre>
+    <h3 id="SyncSpecificationsHandler">func SyncSpecificationsHandler</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">SyncSpecificationsHandler</span><span class="p">(</span><span class="nx">mongoClient</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#Client"><span class="nx">Client</span></a><span class="p">,</span> <span class="nx">elasticClient</span> <span class="o">*</span><a href="https://pkg.go.dev/github.com/elastic/go-elasticsearch/v8"><span class="nx">elasticsearch</span></a><span class="p">.</span><a href="https://pkg.go.dev/github.com/elastic/go-elasticsearch/v8#Client"><span class="nx">Client</span></a><span class="p">)</span> <a href="https://pkg.go.dev/github.com/gin-gonic/gin"><span class="nx">gin</span></a><span class="p">.</span><a href="https://pkg.go.dev/github.com/gin-gonic/gin#HandlerFunc"><span class="nx">HandlerFunc</span></a></pre>
+    </main>
+    <hr>
+    <footer>
+      <small id="generated-by-footer">
+        Generated with <a href="https://abhinav.github.io/doc2go/">doc2go</a>
+      </small>
+    </footer>
+    <script src="../_/js/permalink.js"></script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    var path = window.location.pathname;
+    if (!path.endsWith("/")) { path += "/"; }
+    path += "..";
+
+    new PagefindUI({
+      element: "#search",
+      showSubResults: true,
+      baseUrl: path,
+    });
+  });
+</script></body>
+</html>

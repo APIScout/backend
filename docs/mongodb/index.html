@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="doc2go">
+    <link href="../_/css/main.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../_/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../_/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="../_/icons/favicon.ico"><link href="../_/pagefind/pagefind-ui.css" rel="stylesheet">
+<script src="../_/pagefind/pagefind-ui.js"></script><title>mongodb</title>
+</head>
+  <body>
+    <nav>
+        <a href="..">backend/app/internal</a>/mongodb<span class="navbar-right">
+          <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+      </nav>
+    <div id="search"></div><main
+      data-pagefind-body
+      data-pagefind-filter="Visibility:Internal"><h2 id="pkg-overview" data-pagefind-meta="Import path:backend/app/internal/mongodb">package mongodb</h2>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;backend/app/internal/mongodb&#34;</span></pre>
+<h3 id="pkg-index" data-pagefind-ignore>Index</h3>
+<ul data-pagefind-ignore>
+  <li><a href="#Connect">func Connect(config models.MongoConfig) *mongo.Client</a></li>
+  <li><a href="#InsertDocuments">func InsertDocuments(database *mongo.Database, documents []interface{}, collection string) (*mongo.InsertManyResult, error)</a></li>
+  <li><a href="#RetrieveDocument">func RetrieveDocument(database *mongo.Database, query bson.M, collection string) (bson.Raw, error)</a></li>
+  <li><a href="#RetrieveDocuments">func RetrieveDocuments(database *mongo.Database, query bson.D, collection string) (*mongo.Cursor, error)</a></li>
+  </ul><h3 id="pkg-functions" data-pagefind-ignore>Functions</h3>
+  <h3 id="Connect">func Connect</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">Connect</span><span class="p">(</span><span class="nx">config</span> <a href="../models"><span class="nx">models</span></a><span class="p">.</span><a href="../models#MongoConfig"><span class="nx">MongoConfig</span></a><span class="p">)</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#Client"><span class="nx">Client</span></a></pre>
+    <p>Connect - used to connect to the mongodb database. It will return a mongodb client that can be used to perform
+queries on the database.
+<h3 id="InsertDocuments">func InsertDocuments</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">InsertDocuments</span><span class="p">(</span><span class="nx">database</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#Database"><span class="nx">Database</span></a><span class="p">,</span> <span class="nx">documents</span> <span class="p">[]</span><span class="kd">interface</span><span class="p">{},</span> <span class="nx">collection</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#InsertManyResult"><span class="nx">InsertManyResult</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+    <p>InsertDocuments - insert documents in a collection based on a query. A mongodb database, a document and a collection
+need to be passed to the function.
+<h3 id="RetrieveDocument">func RetrieveDocument</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">RetrieveDocument</span><span class="p">(</span><span class="nx">database</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#Database"><span class="nx">Database</span></a><span class="p">,</span> <span class="nx">query</span> <a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/bson"><span class="nx">bson</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/bson#M"><span class="nx">M</span></a><span class="p">,</span> <span class="nx">collection</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/bson"><span class="nx">bson</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/bson#Raw"><span class="nx">Raw</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+    <p>RetrieveDocument - search a document in a collection based on a query. A mongodb database, a query and a collection
+need to be passed to the function.
+<h3 id="RetrieveDocuments">func RetrieveDocuments</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">RetrieveDocuments</span><span class="p">(</span><span class="nx">database</span> <span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#Database"><span class="nx">Database</span></a><span class="p">,</span> <span class="nx">query</span> <a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/bson"><span class="nx">bson</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/bson#D"><span class="nx">D</span></a><span class="p">,</span> <span class="nx">collection</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo"><span class="nx">mongo</span></a><span class="p">.</span><a href="https://pkg.go.dev/go.mongodb.org/mongo-driver/mongo#Cursor"><span class="nx">Cursor</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+    <p>RetrieveDocuments - search documents in a collection based on a query. A mongodb database, a query and a collection
+need to be passed to the function.
+</main>
+    <hr>
+    <footer>
+      <small id="generated-by-footer">
+        Generated with <a href="https://abhinav.github.io/doc2go/">doc2go</a>
+      </small>
+    </footer>
+    <script src="../_/js/permalink.js"></script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    var path = window.location.pathname;
+    if (!path.endsWith("/")) { path += "/"; }
+    path += "..";
+
+    new PagefindUI({
+      element: "#search",
+      showSubResults: true,
+      baseUrl: path,
+    });
+  });
+</script></body>
+</html>

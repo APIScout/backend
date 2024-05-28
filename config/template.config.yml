@@ -1,8 +1,17 @@
-# Server Configurations
 backend:
   port: 8080
+
+# Mongo Configurations
+mongodb:
+  protocol: ""
+  host: ""
+  port: 27017
+  user: ""
+  password: ""
+
 # ElasticSearch Credentials
 elastic:
+  protocol: ""
   host: ""
   port: 9200
   user: ""

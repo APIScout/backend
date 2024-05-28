@@ -1,0 +1,236 @@
+basePath: /api/v1
+definitions:
+  models.Api:
+    properties:
+      commits:
+        type: integer
+      id:
+        type: integer
+      latest:
+        type: boolean
+      name:
+        type: string
+      source:
+        type: string
+      version:
+        $ref: '#/definitions/models.Version'
+    type: object
+  models.EmbeddingRequest:
+    properties:
+      fields:
+        items:
+          type: string
+        type: array
+      filters:
+        type: string
+      fragment:
+        type: string
+    type: object
+  models.HTTPError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: Bad Request
+        type: string
+    type: object
+  models.Metrics:
+    properties:
+      schema:
+        properties:
+          models:
+            type: integer
+          properties:
+            type: integer
+        type: object
+      security:
+        properties:
+          endpoints:
+            type: integer
+        type: object
+      structure:
+        properties:
+          methods:
+            type: integer
+          operations:
+            type: integer
+          paths:
+            type: integer
+        type: object
+    type: object
+  models.MongoDocument:
+    properties:
+      api:
+        $ref: '#/definitions/models.Api'
+      date:
+        type: string
+      length:
+        type: integer
+      metrics:
+        $ref: '#/definitions/models.Metrics'
+      mongo-id:
+        type: string
+      score:
+        type: number
+      specification:
+        $ref: '#/definitions/models.Specification'
+    type: object
+  models.Specification:
+    properties:
+      type:
+        type: string
+      version:
+        $ref: '#/definitions/models.Version'
+    type: object
+  models.SpecificationBackend:
+    additionalProperties: true
+    type: object
+  models.SpecificationWithApi:
+    properties:
+      metadata:
+        $ref: '#/definitions/models.MongoDocument'
+      specification:
+        type: string
+    type: object
+  models.SpecificationsRequest:
+    properties:
+      specifications:
+        items:
+          $ref: '#/definitions/models.SpecificationBackend'
+        type: array
+    type: object
+  models.Version:
+    properties:
+      build:
+        type: string
+      major:
+        type: integer
+      minor:
+        type: integer
+      patch:
+        type: integer
+      prerelease:
+        type: string
+      raw:
+        type: string
+      valid:
+        type: boolean
+    type: object
+info:
+  contact: {}
+  description: This is the backend for the API Scout platform.
+  title: API Scout
+  version: "1.0"
+paths:
+  /search:
+    post:
+      consumes:
+      - application/json
+      description: Retrieve OpenAPI specifications matching the given query
+      parameters:
+      - default: 1
+        description: page number
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: size of the page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: pageSize
+        type: integer
+      - default: 100
+        description: knn's k
+        in: query
+        maximum: 100
+        minimum: 1
+        name: k
+        type: integer
+      - description: search query
+        in: body
+        name: fragment
+        required: true
+        schema:
+          $ref: '#/definitions/models.EmbeddingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.SpecificationWithApi'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      summary: Search OpenAPI specifications
+      tags:
+      - search
+  /specification:
+    post:
+      consumes:
+      - application/json
+      description: Insert new OpenAPI specifications in the database.
+      parameters:
+      - description: New Specifications
+        in: body
+        name: specifications
+        required: true
+        schema:
+          $ref: '#/definitions/models.SpecificationsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      summary: Insert OpenAPI specifications
+      tags:
+      - specification
+  /specification/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a specific OpenAPI specification's content given a valid
+        ID
+      parameters:
+      - description: Specification ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SpecificationWithApi'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      summary: Get OpenAPI specification
+      tags:
+      - specification
+swagger: "2.0"

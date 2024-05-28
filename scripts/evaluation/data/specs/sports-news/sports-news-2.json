@@ -1,0 +1,219 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "NBA News and Rankings API",
+    "description": "An API for accessing news articles and rankings for the American NBA league.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com"
+    }
+  ],
+  "paths": {
+    "/news": {
+      "get": {
+        "summary": "Get NBA news articles",
+        "description": "Retrieve the latest news articles about the NBA.",
+        "responses": {
+          "200": {
+            "description": "A list of NBA news articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NewsArticle"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new NBA news article",
+        "description": "Submit a new news article about the NBA.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsArticleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The news article has been created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsArticle"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/news/{id}": {
+      "get": {
+        "summary": "Get a specific NBA news article",
+        "description": "Retrieve a specific news article by its ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the news article",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested NBA news article",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsArticle"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing NBA news article",
+        "description": "Update the content of an existing news article.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the news article",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsArticleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The news article has been updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsArticle"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rankings": {
+      "get": {
+        "summary": "Get NBA team rankings",
+        "description": "Retrieve the current rankings of NBA teams.",
+        "responses": {
+          "200": {
+            "description": "A list of NBA team rankings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TeamRanking"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NewsArticle": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the news article."
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the news article."
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the news article."
+          },
+          "author": {
+            "type": "string",
+            "description": "The author of the news article."
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the news article was published."
+          }
+        }
+      },
+      "NewsArticleInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the news article."
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the news article."
+          },
+          "author": {
+            "type": "string",
+            "description": "The author of the news article."
+          }
+        },
+        "required": ["title", "content"]
+      },
+      "TeamRanking": {
+        "type": "object",
+        "properties": {
+          "team_name": {
+            "type": "string",
+            "description": "The name of the NBA team."
+          },
+          "rank": {
+            "type": "integer",
+            "description": "The current rank of the NBA team."
+          },
+          "wins": {
+            "type": "integer",
+            "description": "The number of wins by the NBA team."
+          },
+          "losses": {
+            "type": "integer",
+            "description": "The number of losses by the NBA team."
+          }
+        }
+      }
+    }
+  }
+}

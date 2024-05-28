@@ -1,0 +1,310 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Restaurant Booking Platform API",
+    "description": "API for managing restaurant bookings",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.restaurantbookingplatform.com/v1"
+    }
+  ],
+  "paths": {
+    "/restaurants": {
+      "get": {
+        "summary": "Get all restaurants",
+        "description": "Returns a list of all available restaurants",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Restaurant"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/restaurants/{id}/bookings": {
+      "get": {
+        "summary": "Get restaurant bookings",
+        "description": "Returns a list of bookings for a specific restaurant",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the restaurant",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Booking"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Restaurant not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a booking",
+        "description": "Allows users to create a booking for a specific restaurant",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the restaurant",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookingInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Booking created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Restaurant not found"
+          }
+        }
+      }
+    },
+    "/bookings/{id}": {
+      "get": {
+        "summary": "Get booking by ID",
+        "description": "Returns details of a specific booking",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the booking",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Booking not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update booking by ID",
+        "description": "Allows users to update details of a specific booking",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the booking to update",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookingInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Booking updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Booking not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete booking by ID",
+        "description": "Allows users to delete a specific booking",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the booking to delete",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Booking deleted successfully"
+          },
+          "404": {
+            "description": "Booking not found"
+          }
+        }
+      }
+    },
+    "/restaurants/search": {
+      "get": {
+        "summary": "Search restaurants",
+        "description": "Searches for restaurants based on given criteria",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Search query string",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Restaurant"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Restaurant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the restaurant"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the restaurant"
+          },
+          "address": {
+            "type": "string",
+            "description": "Address of the restaurant"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Contact phone number of the restaurant"
+          }
+        },
+        "required": ["id", "name", "address", "phone"]
+      },
+      "Booking": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the booking"
+          },
+          "restaurant_id": {
+            "type": "integer",
+            "description": "ID of the restaurant for which the booking is made"
+          },
+          "customer_name": {
+            "type": "string",
+            "description": "Name of the customer who made the booking"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time of the booking"
+          },
+          "party_size": {
+            "type": "integer",
+            "description": "Number of people in the booking party"
+          }
+        },
+        "required": ["id", "restaurant_id", "customer_name", "date", "party_size"]
+      },
+      "BookingInput": {
+        "type": "object",
+        "properties": {
+          "customer_name": {
+            "type": "string",
+            "description": "Name of the customer who is making the booking"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Desired date and time for the booking"
+          },
+          "party_size": {
+            "type": "integer",
+            "description": "Number of people in the booking party"
+          }
+        },
+        "required": ["customer_name", "date", "party_size"]
+      }
+    }
+  }
+}
