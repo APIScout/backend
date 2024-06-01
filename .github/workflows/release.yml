@@ -1,0 +1,20 @@
+name: Create a Release
+
+on: [ push ]
+
+jobs:
+  release:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Create Release
+        if: github.ref == 'refs/heads/dev'
+        uses: DasBen/release-on-push-action@master
+        with:
+          bump_version_scheme: minor
+          tag_prefix: v
+      - name: Create Release
+        if: github.ref == 'refs/heads/main'
+        uses: DasBen/release-on-push-action@master
+        with:
+          bump_version_scheme: major
+          tag_prefix: v
