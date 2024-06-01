@@ -5,6 +5,8 @@ on: [ push ]
 jobs:
   release:
     runs-on: "ubuntu-latest"
+    env:
+      GITHUB_TOKEN: ${{ secrets.TOKEN }}
     steps:
       - name: Create Release
         if: github.ref == 'refs/heads/dev'
