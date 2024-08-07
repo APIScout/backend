@@ -82,6 +82,7 @@ func GetSpecificationHandler(mongoClient *mongo.Client, elasticClient *elasticse
 		}
 
 		// Return the JSON representation of the document
+		ctx.Header("Access-Control-Allow-Origin", "*")
 		ctx.JSON(http.StatusOK, specObj)
 	}
 

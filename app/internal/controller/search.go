@@ -67,7 +67,7 @@ func SearchHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Clien
 			return
 		}
 
-		if strings.Compare(body.Fragment, "") != 0 && page * pageSize > k {
+		if strings.Compare(body.Fragment, "") != 0 && page*pageSize > k {
 			NewHTTPError(ctx, http.StatusBadRequest, "page * size must not be greater than k")
 			return
 		}
@@ -125,6 +125,7 @@ func SearchHandler(mongoClient *mongo.Client, elasticClient *elasticsearch.Clien
 			jsonMaps = append(jsonMaps, specObj)
 		}
 
+		ctx.Header("Access-Control-Allow-Origin", "*")
 		ctx.JSON(http.StatusOK, jsonMaps)
 	}
 
@@ -145,6 +146,7 @@ func GetEmbedding(ctx *gin.Context) {
 
 	res.Query = embedding.PreprocessFragment([]string{res.Query}, false)[0]
 
+	ctx.Header("Access-Control-Allow-Origin", "*")
 	ctx.JSON(http.StatusOK, res)
 }
 
