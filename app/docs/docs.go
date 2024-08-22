@@ -43,7 +43,7 @@ const docTemplate = `{
                         "type": "integer",
                         "default": 10,
                         "description": "size of the page",
-                        "name": "pageSize",
+                        "name": "size",
                         "in": "query"
                     },
                     {

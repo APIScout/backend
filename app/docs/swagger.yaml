@@ -140,7 +140,7 @@ paths:
         in: query
         maximum: 100
         minimum: 1
-        name: pageSize
+        name: size
         type: integer
       - default: 100
         description: knn's k
