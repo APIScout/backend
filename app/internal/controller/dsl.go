@@ -13,7 +13,7 @@ import (
 //	@Tags			DSL
 //	@Produce		json
 //	@Param			page		parameter		string						false	"parameter name"
-//	@Success		200			{object}	models.TypesMap|models.TypeToOperatorMap
+//	@Success		200			{object}	models.TypesMap|[]string
 //	@Failure		400			{object}	models.HTTPError
 //	@Failure		500			{object}	models.HTTPError
 //	@Router			/search [post]
