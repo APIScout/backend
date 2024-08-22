@@ -19,6 +19,7 @@ func SetupRoutes(router *gin.Engine, config *models.Config) {
 	{
 		v1.POST("/search", SearchHandler(mongoClient, elasticClient))
 		v1.POST("/preprocess", GetEmbedding)
+		v1.GET("/dsl", GetDSL)
 		spec := v1.Group("/specification")
 		{
 			spec.POST("/", PostSpecificationHandler(mongoClient, elasticClient))

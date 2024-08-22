@@ -65,6 +65,14 @@ var OperatorToEsMap = map[string]string{
 	"<":  "lt",
 }
 
+var TypeToOperatorsMap = map[string][]string{
+	"str":     {"==", "!=", "~="},
+	"int":     {"==", "!=", "~=", ">", ">=", "<", "<=", "<>"},
+	"bool":    {"==", "!="},
+	"version": {"==", "!=", "~=", ">", ">=", "<", "<=", "<>"},
+	"date":    {"==", "!=", ">", ">=", "<", "<=", "<>"},
+}
+
 var BracketsMap = map[string]string{
 	"[": ">=",
 	"(": ">",
