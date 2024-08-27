@@ -52,7 +52,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: edoriggio/api-scout
+          images: edoriggio/api-scout-backend
 
       - name: Build and push image
         uses: docker/build-push-action@v5
